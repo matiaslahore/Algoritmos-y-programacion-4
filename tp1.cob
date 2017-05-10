@@ -101,7 +101,7 @@
           03 MAE-TEL    PIC 9(15).
           03 MAE-DIR    PIC X(30).
           03 MAE-CTA    PIC 9(8).
-       01  LINEA PIC X(60).
+       01 LINEA PIC X(60).
 
        WORKING-STORAGE SECTION.
 
@@ -133,18 +133,18 @@
        01  SUBINDICE PIC 9(2) VALUE 1.
        01  BAJAS PIC 9(3) VALUE 0.
        01  ALTAS PIC 9(3) VALUE 0.
-       01  MIN PIC 9(15).
+       01  MIN PIC 9(15) VALUE 0.
        01  NRO-CTA-MAE PIC 9(15) VALUE 0.
 
-       01  TABLA-ESTADO.
-           02 TAB-ESTADO OCCURS 30 TIMES.
-               03 TAB-EST-ESTADO PIC 9(2).
-               03 TAB-EST-DESCRIP PIC X(15).
+       01 TABLA-ESTADO.
+          03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
+              05 TAB-EST-ESTADO PIC 9(2).
+              05 TAB-EST-DESCRIP PIC X(15).
 
-       01  TABLA-ESTADISTICAS.
-           02 TAB-ESTADIS OCCURS 10 TIMES.
-               03 TAB-ANIO PIC 9(4) VALUE 0.
-               03 TAB-CANT PIC 9(3) VALUE 0.
+       01 TABLA-ESTADISTICAS.
+           03 TAB-ESTADIS OCCURS 10 TIMES INDEXED BY TABLA-ID-ESTADISTICAS-INDEX.
+               05 TAB-ANIO PIC 9(4) VALUE 0.
+               05 TAB-CANT PIC 9(3) VALUE 0.
 
        01  LINEA1.
            03 FILLER PIC X(7) VALUE "Fecha: ".
@@ -179,8 +179,8 @@
             PERFORM CERRAR-ARCHIVOS.
             STOP RUN.
 
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        INICIO.
         OPEN INPUT CONS1.
         OPEN INPUT CONS2.
@@ -188,8 +188,8 @@
         OPEN INPUT CTA.
         OPEN INPUT EST.
         OPEN OUTPUT MAE.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        CERRAR-ARCHIVOS.
         CLOSE CONS1.
         CLOSE CONS2.
@@ -197,61 +197,49 @@
         CLOSE CTA.
         CLOSE EST.
         CLOSE MAE.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        CARGAR-TABLAS.
-        PERFORM CARGAR-ESTADO UNTIL EOF-EST.
-      *  MOVE 1 TO SUBINDICE.
-      *  PERFORM CARGAR-ESTADISTICAS UNTIL ??.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
-       CARGAR-ESTADO.
+        MOVE 1 TO SUBINDICE.
         PERFORM LEER-EST.
         PERFORM LLENAR-TABLA-EST UNTIL EOF-EST OR SUBINDICE > 30.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LLENAR-TABLA-EST.
         MOVE EST-ESTADO TO TAB-EST-ESTADO(SUBINDICE).
         MOVE EST-DESCRIP  TO TAB-EST-DESCRIP(SUBINDICE).
         ADD 1 TO SUBINDICE.
         PERFORM LEER-EST.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
-       CARGAR-ESTADISTICAS.
-      * MOVE ID TO TAB-EST-ID(SUBINDICE).
-      * ADD 1 TO SUBINDICE.
-      * PERFORM LEER-ESTADISTICAS.
-
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LEER-CONS1.
         READ CONS1
-            AT END MOVE "10" TO FS-CONS1.
+          AT END MOVE "10" TO FS-CONS1.
         IF FS-CONS1 NOT EQUAL ZERO AND "10"
-            DISPLAY 'ERROR AL LEER CONS1' FS-CONS1.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+          DISPLAY 'ERROR AL LEER CONS1' FS-CONS1.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LEER-CONS2.
         READ CONS2
-            AT END MOVE "10" TO FS-CONS2.
+          AT END MOVE "10" TO FS-CONS2.
         IF FS-CONS2 NOT EQUAL ZERO AND "10"
-            DISPLAY 'ERROR AL LEER CONS2' FS-CONS2.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+          DISPLAY 'ERROR AL LEER CONS2' FS-CONS2.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LEER-CONS3.
         READ CONS3
-            AT END MOVE "10" TO FS-CONS3.
+          AT END MOVE "10" TO FS-CONS3.
         IF FS-CONS3 NOT EQUAL ZERO AND "10"
-            DISPLAY 'ERROR AL LEER CONS3' FS-CONS3.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+          DISPLAY 'ERROR AL LEER CONS3' FS-CONS3.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LEER-CTA.
         READ CTA
-            AT END MOVE "10" TO FS-CTA.
+          AT END MOVE "10" TO FS-CTA.
         IF FS-CTA NOT EQUAL ZERO AND "10"
-            DISPLAY 'ERROR AL LEER CTA' FS-CTA.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+          DISPLAY 'ERROR AL LEER CTA' FS-CTA.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        IMPR-CABECERA.
            MOVE "1993/05/22" TO FECHA.
            MOVE 1 TO HOJA.
@@ -259,15 +247,15 @@
            DISPLAY LINEA.
            MOVE TITULO TO LINEA.
            DISPLAY LINEA.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        LEER-EST.
         READ EST
             AT END MOVE "10" TO FS-EST.
         IF FS-EST NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER EST' FS-EST.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        PROCESAR-ARCHIVOS.
            PERFORM DET-MIN.
            PERFORM POS-CTAS.
@@ -279,8 +267,8 @@
            IF MIN EQUAL CONS3-CUIT-CONS
                PERFORM PROCESO-C3.
 
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        DET-MIN.
            MOVE CONS1-CUIT-CONS TO MIN.
            IF MIN >= CONS2-CUIT-CONS
@@ -289,12 +277,15 @@
                MOVE CONS3-CUIT-CONS TO MIN.
            IF MIN >= CTA-CUIT-CONS
                MOVE CTA-CUIT-CONS TO MIN.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        POS-CTAS.
            IF MIN EQUAL CTA-CUIT-CONS
-               MOVE CTA-NRO-CTA TO NRO-CTA-MAE.
+               MOVE CTA-NRO-CTA TO MAE-CTA.
+               MOVE CTA-FECHA-ALTA TO MAE-FECHA-ALTA.
            PERFORM LEER-CTA.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        PROCESO-C1.
            PERFORM ULTIMO-REG UNTIL EOF-CONS1
                               OR MIN <> CONS1-CUIT-CONS.
@@ -303,24 +294,82 @@
                ADD 1 TO BAJAS.
            IF EST-ESTADO <> 2
                PERFORM BUSCAR-ESTADO.
+               MOVE CONS1-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
+               MOVE CONS1-TEL TO MAE-TEL.
+               MOVE CONS1-DIR TO MAE-DIR.
                PERFORM ESCRIBO-MAE.
                ADD 1 TO ALTAS.
                PERFORM BUSCAR-ESTADISTICAS.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        PROCESO-C2.
+           PERFORM ULTIMO-REG UNTIL EOF-CONS2
+                              OR MIN <> CONS2-CUIT-CONS.
+           IF EST-ESTADO = 2
+               PERFORM IMPR-CONS
+               ADD 1 TO BAJAS.
+           IF EST-ESTADO <> 2
+               PERFORM BUSCAR-ESTADO.
+               MOVE CONS2-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
+               MOVE CONS2-TEL TO MAE-TEL.
+               MOVE CONS2-DIR TO MAE-DIR.
+               PERFORM ESCRIBO-MAE.
+               ADD 1 TO ALTAS.
+               PERFORM BUSCAR-ESTADISTICAS.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        PROCESO-C3.
-       ULTIMO-REG.
-       IMPR-CONS.
+           PERFORM ULTIMO-REG UNTIL EOF-CONS3
+                              OR MIN <> CONS3-CUIT-CONS.
+           IF EST-ESTADO = 2
+               PERFORM IMPR-CONS
+               ADD 1 TO BAJAS.
+           IF EST-ESTADO <> 2
+               PERFORM BUSCAR-ESTADO.
+               MOVE CONS3-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
+               MOVE CONS3-TEL TO MAE-TEL.
+               MOVE CONS3-DIR TO MAE-DIR.
+               PERFORM ESCRIBO-MAE.
+               ADD 1 TO ALTAS.
+               PERFORM BUSCAR-ESTADISTICAS.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        BUSCAR-ESTADO.
+        MOVE 1 TO TABLA-ID-EST-INDEX.
+        SEARCH TAB-ESTADO
+          AT END MOVE 'SIN ESTADO' TO MAE-DESCRIP-ESTADO
+          WHEN TAB-EST-ESTADO(TABLA-ID-EST-INDEX) = EST-ESTADO
+            MOVE TAB-EST-DESCRIP(TABLA-ID-EST-INDEX) TO MAE-DESCRIP-ESTADO.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        ESCRIBO-MAE.
+        MOVE MIN TO MAE-CUIT-CONS
+        WRITE REG-MAE.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        BUSCAR-ESTADISTICAS.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+        MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
+        SEARCH TAB-ESTADIS
+          AT END PERFORM EST-AGREGAR-NUEVO
+          WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX) = MAE-FECHA-ALTA
+            ADD 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        IMPR-TOT-BAJAS.
            MOVE BAJAS TO CANT-BAJAS.
            MOVE IMP-BAJAS TO LINEA.
            DISPLAY LINEA.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      EST-AGREGAR-NUEVO.
+        MOVE MAE-FECHA-ALTA TO TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX).
+        MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
-      *-----------------------------------------------------------*
-      *-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPR-CONS.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       ULTIMO-REG.
