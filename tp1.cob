@@ -195,6 +195,11 @@
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        CARGAR-ESTADO.
+        PERFORM LEER-EST.
+        PERFORM LLENAR-TABLA-EST UNTIL EOF-EST OR SUBINDICE > 30.
+      *-----------------------------------------------------------*
+      *-----------------------------------------------------------*
+       LLENAR-TABLA-EST.
         MOVE EST-ESTADO TO TAB-EST-ESTADO(SUBINDICE).
         MOVE EST-DESCRIP  TO TAB-EST-DESCRIP(SUBINDICE).
         ADD 1 TO SUBINDICE.
