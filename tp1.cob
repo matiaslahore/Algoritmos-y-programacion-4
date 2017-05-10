@@ -134,12 +134,19 @@
             88 NO-MAE VALUE "23".
             88 EOF-MAE VALUE "10".
 
-       01 SUBINDICE PIC 9(2) VALUE 1.
+       01  SUBINDICE PIC 9(2) VALUE 1.
+       01  BAJAS PIC 9(3) VALUE 0.
 
-       01 TABLA-ESTADO.
+       01  TABLA-ESTADO.
            02 TAB-ESTADO OCCURS 30 TIMES.
                03 TAB-EST-ESTADO PIC 9(2).
                03 TAB-EST-DESCRIP PIC X(15).
+
+       01  TABLA-ESTADISTICAS.
+           02 TAB-ESTADIS OCCURS 10 TIMES.
+               03 TAB-ANIO PIC 9(4) VALUE 0.
+               03 TAB-CANT PIC 9(3) VALUE 0.
+
        01  LINEA1.
            03 FILLER PIC X(7) VALUE "Fecha: ".
            03 FECHA PIC X(10).
@@ -150,6 +157,10 @@
            03 FILLER PIC X(15) VALUE SPACES.
            03 FILLER PIC X(29) VALUE "LISTADO DE CONSORCIOS DE BAJA".
            03 FILLER PIC X(16) VALUE SPACES.
+       01  IMP-BAJAS.
+           03 FILLER PIC X(32) VALUE "Total consorcios dados de baja: ".
+           03 CANT-BAJAS PIC 9(3) VALUE 0.
+           03 FILLER PIC X(25) VALUE SPACES.
 
        PROCEDURE DIVISION.
        COMIENZO.
@@ -190,7 +201,7 @@
       *-----------------------------------------------------------*
        CARGAR-TABLAS.
         PERFORM CARGAR-ESTADO UNTIL EOF-EST.
-        MOVE 1 TO SUBINDICE.
+      *  MOVE 1 TO SUBINDICE.
       *  PERFORM CARGAR-ESTADISTICAS UNTIL ??.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
@@ -206,10 +217,10 @@
         PERFORM LEER-EST.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
-      * CARGAR-ESTADISTICAS.
-      *  MOVE ID TO TAB-EST-ID(SUBINDICE).
-      *  ADD 1 TO SUBINDICE.
-      *  PERFORM LEER-ESTADISTICAS.
+       CARGAR-ESTADISTICAS.
+      * MOVE ID TO TAB-EST-ID(SUBINDICE).
+      * ADD 1 TO SUBINDICE.
+      * PERFORM LEER-ESTADISTICAS.
 
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
@@ -261,6 +272,9 @@
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        IMPR-TOT-BAJAS.
+           MOVE BAJAS TO CANT-BAJAS.
+           MOVE IMP-BAJAS TO LINEA.
+           DISPLAY LINEA.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
