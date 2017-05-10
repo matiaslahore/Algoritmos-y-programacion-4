@@ -132,6 +132,7 @@
 
        01  SUBINDICE PIC 9(2) VALUE 1.
        01  BAJAS PIC 9(3) VALUE 0.
+       01  ALTAS PIC 9(3) VALUE 0.
        01  MIN PIC 9(15).
        01  NRO-CTA-MAE PIC 9(15) VALUE 0.
 
@@ -295,8 +296,23 @@
                MOVE CTA-NRO-CTA TO NRO-CTA-MAE.
            PERFORM LEER-CTA.
        PROCESO-C1.
+           PERFORM ULTIMO-REG UNTIL EOF-CONS1
+                              OR MIN <> CONS1-CUIT-CONS.
+           IF EST-ESTADO = 2
+               PERFORM IMPR-CONS
+               ADD 1 TO BAJAS.
+           IF EST-ESTADO <> 2
+               PERFORM BUSCAR-ESTADO.
+               PERFORM ESCRIBO-MAE.
+               ADD 1 TO ALTAS.
+               PERFORM BUSCAR-ESTADISTICAS.
        PROCESO-C2.
        PROCESO-C3.
+       ULTIMO-REG.
+       IMPR-CONS.
+       BUSCAR-ESTADO.
+       ESCRIBO-MAE.
+       BUSCAR-ESTADISTICAS.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        IMPR-TOT-BAJAS.
