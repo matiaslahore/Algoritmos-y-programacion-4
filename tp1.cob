@@ -136,6 +136,8 @@
 
        01  SUBINDICE PIC 9(2) VALUE 1.
        01  BAJAS PIC 9(3) VALUE 0.
+       01  MIN PIC 9(15).
+       01  NRO-CTA-MAE PIC 9(15) VALUE 0.
 
        01  TABLA-ESTADO.
            02 TAB-ESTADO OCCURS 30 TIMES.
@@ -269,6 +271,35 @@
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        PROCESAR-ARCHIVOS.
+           PERFORM DET-MIN.
+           PERFORM POS-CTAS.
+           MOVE 0 TO NRO-CTA-MAE.
+           IF MIN EQUAL CONS1-CUIT-CONS
+               PERFORM PROCESO-C1.
+           IF MIN EQUAL CONS2-CUIT-CONS
+               PERFORM PROCESO-C2.
+           IF MIN EQUAL CONS3-CUIT-CONS
+               PERFORM PROCESO-C3.
+
+      *-----------------------------------------------------------*
+      *-----------------------------------------------------------*
+       DET-MIN.
+           MOVE CONS1-CUIT-CONS TO MIN.
+           IF MIN >= CONS2-CUIT-CONS
+               MOVE CONS2-CUIT-CONS TO MIN.
+           IF MIN >= CONS3-CUIT-CONS
+               MOVE CONS3-CUIT-CONS TO MIN.
+           IF MIN >= CTA-CUIT-CONS
+               MOVE CTA-CUIT-CONS TO MIN.
+      *-----------------------------------------------------------*
+      *-----------------------------------------------------------*
+       POS-CTAS.
+           IF MIN EQUAL CTA-CUIT-CONS
+               MOVE CTA-NRO-CTA TO NRO-CTA-MAE.
+           PERFORM LEER-CTA.
+       PROCESO-C1.
+       PROCESO-C2.
+       PROCESO-C3.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        IMPR-TOT-BAJAS.
