@@ -25,8 +25,7 @@
        DATA DIVISION.
        FILE SECTION.
 
-       FD CONS1     LABEL RECORD IS STANDARD
-                    VALUE OF FILE-ID IS "CONS1.DAT".
+       FD CONS1.
        01 REG-CONS1.
             03 CONS1-CUIT-CONS    PIC 9(15).
             03 CONS1-FECHA-ALTA.
@@ -42,8 +41,7 @@
             03 CONS1-TEL        PIC X(15).
             03 CONS1-DIR        PIC X(30).
 
-       FD CONS2     LABEL RECORD IS STANDARD
-                    VALUE OF FILE-ID IS "CONS2.DAT".
+       FD CONS2.
        01 REG-CONS2.
             03 CONS2-CUIT-CONS    PIC 9(15).
             03 CONS2-FECHA-ALTA.
@@ -59,8 +57,7 @@
             03 CONS2-TEL        PIC X(15).
             03 CONS2-DIR        PIC X(30).
 
-       FD CONS3     LABEL RECORD IS STANDARD
-                    VALUE OF FILE-ID IS "CONS3.DAT".
+       FD CONS3.
        01 REG-CONS3.
             03 CONS3-CUIT-CONS    PIC 9(15).
             03 CONS3-FECHA-ALTA.
@@ -76,8 +73,7 @@
             03 CONS3-TEL        PIC X(15).
             03 CONS3-DIR        PIC X(30).
 
-       FD CTA     LABEL RECORD IS STANDARD
-                  VALUE OF FILE-ID IS "CTA.DAT".
+       FD CTA.
        01 REG-CTA.
           03 CTA-CUIT-CONS    PIC 9(15).
           03 CTA-NRO-CTA      PIC 9(8).
@@ -88,14 +84,12 @@
           03 CTA-ENTIDAD      PIC 9(3).
           03 CTA-SUCURSAL     PIC 9(3).
 
-       FD EST     LABEL RECORD IS STANDARD
-                  VALUE OF FILE-ID IS "EST.DAT".
+       FD EST.
        01 REG-EST.
           03 EST-ESTADO     PIC 9(2).
           03 EST-DESCRIP    PIC X(15).
 
-       FD MAE     LABEL RECORD IS STANDARD
-                  VALUE OF FILE-ID IS "MAE.DAT".
+       FD MAE.
        01 REG-MAE.
           03 MAE-CUIT-CONS    PIC 9(15).
           03 MAE-FECHA-ALTA.
@@ -108,28 +102,30 @@
           03 MAE-DIR    PIC X(30).
           03 MAE-CTA    PIC 9(8).
        01  LINEA PIC X(60).
+
        WORKING-STORAGE SECTION.
-       01 FS-CONS1 PIC XX.
+
+       77  FS-CONS1 PIC XX.
             88 OK-CONS1 VALUE "00".
             88 NO-CONS1 VALUE "23".
             88 EOF-CONS1 VALUE "10".
-       01 FS-CONS2 PIC XX.
+       77  FS-CONS2 PIC XX.
             88 OK-CONS2 VALUE "00".
             88 NO-CONS2 VALUE "23".
             88 EOF-CONS2 VALUE "10".
-       01 FS-CONS3 PIC XX.
+       77  FS-CONS3 PIC XX.
             88 OK-CONS3 VALUE "00".
             88 NO-CONS3 VALUE "23".
             88 EOF-CONS3 VALUE "10".
-       01 FS-CTA PIC XX.
+       77  FS-CTA PIC XX.
             88 OK-CTA VALUE "00".
             88 NO-CTA VALUE "23".
             88 EOF-CTA VALUE "10".
-       01 FS-EST PIC XX.
+       77  FS-EST PIC XX.
             88 OK-EST VALUE "00".
             88 NO-EST VALUE "23".
             88 EOF-EST VALUE "10".
-       01 FS-MAE PIC XX.
+       77 FS-MAE PIC XX.
             88 OK-MAE VALUE "00".
             88 NO-MAE VALUE "23".
             88 EOF-MAE VALUE "10".
@@ -175,7 +171,8 @@
             PERFORM IMPR-CABECERA.
             PERFORM CARGAR-TABLAS.
             PERFORM PROCESAR-ARCHIVOS UNTIL EOF-CONS1
-            AND EOF-CONS2 AND EOF-CONS3.
+                                      AND EOF-CONS2
+                                      AND EOF-CONS3.
             PERFORM IMPR-TOT-BAJAS.
             PERFORM IMPR-ESTADISTICAS.
             PERFORM CERRAR-ARCHIVOS.
@@ -228,28 +225,28 @@
       *-----------------------------------------------------------*
        LEER-CONS1.
         READ CONS1
-            AT END MOVE "10" TO EOF-CONS1.
+            AT END MOVE "10" TO FS-CONS1.
         IF FS-CONS1 NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER CONS1' FS-CONS1.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        LEER-CONS2.
         READ CONS2
-            AT END MOVE "10" TO EOF-CONS2.
+            AT END MOVE "10" TO FS-CONS2.
         IF FS-CONS2 NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER CONS2' FS-CONS2.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        LEER-CONS3.
         READ CONS3
-            AT END MOVE "10" TO EOF-CONS3.
+            AT END MOVE "10" TO FS-CONS3.
         IF FS-CONS3 NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER CONS3' FS-CONS3.
       *-----------------------------------------------------------*
       *-----------------------------------------------------------*
        LEER-CTA.
         READ CTA
-            AT END MOVE "10" TO EOF-CTA.
+            AT END MOVE "10" TO FS-CTA.
         IF FS-CTA NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER CTA' FS-CTA.
       *-----------------------------------------------------------*
@@ -265,7 +262,7 @@
       *-----------------------------------------------------------*
        LEER-EST.
         READ EST
-            AT END MOVE "10" TO EOF-EST.
+            AT END MOVE "10" TO FS-EST.
         IF FS-EST NOT EQUAL ZERO AND "10"
             DISPLAY 'ERROR AL LEER EST' FS-EST.
       *-----------------------------------------------------------*
