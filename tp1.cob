@@ -1,3 +1,11 @@
+      ******************************************************************
+      * Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
+      *          Nicolas Outeda.
+      * Date: 3/4/2017 DD/MM/AAAA
+      * Purpose: TP Materia: Algoritmos y Programación IV
+      * Tectonics: cobc
+      ******************************************************************
+
        IDENTIFICATION DIVISION.
        PROGRAM-ID. TP.
        ENVIRONMENT DIVISION.
@@ -141,20 +149,21 @@
        01  ESTADO-CONSORCIO PIC 9(02) VALUE 0.
        01  FECHA-ALTA-CONSORCIO.
            03 FAC-ANIO   PIC 9(4).
-           03 FAC-MES    PIC 9(2). 
-           03 FAC-DIA    PIC 9(2). 
+           03 FAC-MES    PIC 9(2).
+           03 FAC-DIA    PIC 9(2).
        01  FECHA-BAJA-CONSORCIO.
            03 FBC-ANIO   PIC 9(4).
-           03 FBC-MES    PIC 9(2). 
-           03 FBC-DIA    PIC 9(2). 
+           03 FBC-MES    PIC 9(2).
+           03 FBC-DIA    PIC 9(2).
 
        01 TABLA-ESTADO.
-          03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
+           03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
               05 TAB-EST-ESTADO PIC 9(2).
               05 TAB-EST-DESCRIP PIC X(15).
 
        01 TABLA-ESTADISTICAS.
-           03 TAB-ESTADIS OCCURS 10 TIMES INDEXED BY TABLA-ID-ESTADISTICAS-INDEX.
+           03 TAB-ESTADIS OCCURS 10 TIMES
+           INDEXED BY TABLA-ID-ESTADISTICAS-INDEX.
                05 TAB-ANIO PIC 9(4) VALUE 0.
                05 TAB-CANT PIC 9(3) VALUE 0.
 
@@ -164,6 +173,7 @@
            03 FILLER PIC X(32) VALUE SPACES.
            03 FILLER PIC X(9) VALUE "Hoja nro ".
            03 HOJA PIC 9(2).
+
        01  CONSOR-BAJA-ROTULO.
            03 FILLER PIC X(9) VALUE "CUIT-CONS".
            03 FILLER PIC X(8) VALUE "FEC-ALTA".
@@ -171,27 +181,31 @@
            03 FILLER PIC X(6) VALUE "NOMBRE".
            03 FILLER PIC X(8) VALUE "TELEFONO".
            03 FILLER PIC X(9) VALUE "DIRECCION".
+
        01  CONSOR-BAJA.
            03 IMPR-CUIT-CONS PIC 9(15).
            03 IMPR-FECHA-ALTA-CONSORCIO.
                05 IMPR-FAC-ANIO   PIC 9(4).
-               05 IMPR-FAC-MES    PIC 9(2). 
+               05 IMPR-FAC-MES    PIC 9(2).
                05 IMPR-FAC-DIA    PIC 9(2).
            03 IMPR-FECHA-BAJA-CONSORCIO.
                05 IMPR-FAC-ANIO   PIC 9(4).
-               05 IMPR-FAC-MES    PIC 9(2). 
-               05 IMPR-FAC-DIA    PIC 9(2).  
+               05 IMPR-FAC-MES    PIC 9(2).
+               05 IMPR-FAC-DIA    PIC 9(2).
            03 IMPR-NOMBRE PIC X(30) VALUE SPACES.
            03 IMPR-TEL PIC X(15) VALUE SPACES.
            03 IMPR-DIR PIC X(30) VALUE SPACES.
+
        01  TITULO.
            03 FILLER PIC X(15) VALUE SPACES.
            03 FILLER PIC X(29) VALUE "LISTADO DE CONSORCIOS DE BAJA".
            03 FILLER PIC X(16) VALUE SPACES.
+
        01  IMP-BAJAS.
            03 FILLER PIC X(32) VALUE "Total consorcios dados de baja: ".
            03 CANT-BAJAS PIC 9(3) VALUE 0.
            03 FILLER PIC X(25) VALUE SPACES.
+
        01  IMPR-EST-LINEA.
            03 IMPR-EST-ANIO PIC 9(4) VALUE 0.
            03 IMPR-EST-CANT PIC 9(3) VALUE 0.
@@ -275,7 +289,7 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CABECERA.
-           MOVE "1993/05/22" TO FECHA.
+           MOVE "2017/05/11" TO FECHA.
            MOVE 1 TO HOJA.
            MOVE LINEA1 TO LINEA.
            DISPLAY LINEA.
@@ -336,7 +350,8 @@
         SEARCH TAB-ESTADO
           AT END MOVE 'SIN ESTADO' TO MAE-DESCRIP-ESTADO
           WHEN TAB-EST-ESTADO(TABLA-ID-EST-INDEX) = EST-ESTADO
-            MOVE TAB-EST-DESCRIP(TABLA-ID-EST-INDEX) TO MAE-DESCRIP-ESTADO.
+            MOVE TAB-EST-DESCRIP(TABLA-ID-EST-INDEX)
+            TO MAE-DESCRIP-ESTADO.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ESCRIBO-MAE.
@@ -361,7 +376,7 @@
            DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
-      EST-AGREGAR-NUEVO.
+       EST-AGREGAR-NUEVO.
         MOVE MAE-FECHA-ALTA TO TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX).
         MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
@@ -418,3 +433,4 @@
         MOVE DIR-CONSORCIO TO IMPR-DIR.
         MOVE CONSOR-BAJA TO LINEA.
         DISPLAY LINEA.
+      *>-----------------------------------------------------------*
