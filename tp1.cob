@@ -135,6 +135,10 @@
        01  ALTAS PIC 9(3) VALUE 0.
        01  MIN PIC 9(15) VALUE 0.
        01  NRO-CTA-MAE PIC 9(15) VALUE 0.
+       01  DIR-CONSORCIO PIC X(30).
+       01  TEL-CONSORCIO PIC X(15).
+       01  NOMBRE-CONSORCIO PIC X(30).
+       01  ESTADO-CONSORCIO PIC 9(02) VALUE 0.
 
        01 TABLA-ESTADO.
           03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
@@ -259,14 +263,23 @@
        PROCESAR-ARCHIVOS.
            PERFORM DET-MIN.
            PERFORM POS-CTAS.
-           MOVE 0 TO NRO-CTA-MAE.
            IF MIN EQUAL CONS1-CUIT-CONS
-               PERFORM PROCESO-C1.
+              PERFORM ULTIMO-REG-CONS1 UNTIL EOF-CONS1
+                              OR MIN <> CONS1-CUIT-CONS.
            IF MIN EQUAL CONS2-CUIT-CONS
-               PERFORM PROCESO-C2.
+              PERFORM ULTIMO-REG-CONS2 UNTIL EOF-CONS2
+                              OR MIN <> CONS2-CUIT-CONS.
            IF MIN EQUAL CONS3-CUIT-CONS
-               PERFORM PROCESO-C3.
-
+              PERFORM ULTIMO-REG-CONS3 UNTIL EOF-CONS3
+                              OR MIN <> CONS3-CUIT-CONS.
+           IF ESTADO-CONSORCIO = 2
+               PERFORM IMPR-CONS
+               ADD 1 TO BAJAS.
+           IF ESTADO-CONSORCIO <> 2
+               PERFORM BUSCAR-ESTADO.
+               PERFORM ESCRIBO-MAE.
+               ADD 1 TO ALTAS.
+               PERFORM BUSCAR-ESTADISTICAS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        DET-MIN.
@@ -286,54 +299,6 @@
            PERFORM LEER-CTA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
-       PROCESO-C1.
-           PERFORM ULTIMO-REG UNTIL EOF-CONS1
-                              OR MIN <> CONS1-CUIT-CONS.
-           IF EST-ESTADO = 2
-               PERFORM IMPR-CONS
-               ADD 1 TO BAJAS.
-           IF EST-ESTADO <> 2
-               PERFORM BUSCAR-ESTADO.
-               MOVE CONS1-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
-               MOVE CONS1-TEL TO MAE-TEL.
-               MOVE CONS1-DIR TO MAE-DIR.
-               PERFORM ESCRIBO-MAE.
-               ADD 1 TO ALTAS.
-               PERFORM BUSCAR-ESTADISTICAS.
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
-       PROCESO-C2.
-           PERFORM ULTIMO-REG UNTIL EOF-CONS2
-                              OR MIN <> CONS2-CUIT-CONS.
-           IF EST-ESTADO = 2
-               PERFORM IMPR-CONS
-               ADD 1 TO BAJAS.
-           IF EST-ESTADO <> 2
-               PERFORM BUSCAR-ESTADO.
-               MOVE CONS2-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
-               MOVE CONS2-TEL TO MAE-TEL.
-               MOVE CONS2-DIR TO MAE-DIR.
-               PERFORM ESCRIBO-MAE.
-               ADD 1 TO ALTAS.
-               PERFORM BUSCAR-ESTADISTICAS.
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
-       PROCESO-C3.
-           PERFORM ULTIMO-REG UNTIL EOF-CONS3
-                              OR MIN <> CONS3-CUIT-CONS.
-           IF EST-ESTADO = 2
-               PERFORM IMPR-CONS
-               ADD 1 TO BAJAS.
-           IF EST-ESTADO <> 2
-               PERFORM BUSCAR-ESTADO.
-               MOVE CONS3-NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
-               MOVE CONS3-TEL TO MAE-TEL.
-               MOVE CONS3-DIR TO MAE-DIR.
-               PERFORM ESCRIBO-MAE.
-               ADD 1 TO ALTAS.
-               PERFORM BUSCAR-ESTADISTICAS.
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
        BUSCAR-ESTADO.
         MOVE 1 TO TABLA-ID-EST-INDEX.
         SEARCH TAB-ESTADO
@@ -344,6 +309,9 @@
       *>-----------------------------------------------------------*
        ESCRIBO-MAE.
         MOVE MIN TO MAE-CUIT-CONS
+        MOVE NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
+        MOVE TEL-CONSORCIO TO MAE-TEL.
+        MOVE DIR-CONSORCIO TO MAE-DIR.
         WRITE REG-MAE.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -366,10 +334,33 @@
         MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
+       ULTIMO-REG-CONS1.
+        MOVE CONS1-DIR TO DIR-CONSORCIO.
+        MOVE CONS1-TEL TO TEL-CONSORCIO.
+        MOVE CONS1-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
+        MOVE CONS1-ESTADO TO ESTADO-CONSORCIO.
+        PERFORM LEER-CONS1.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       ULTIMO-REG-CONS2.
+        MOVE CONS2-DIR TO DIR-CONSORCIO.
+        MOVE CONS2-TEL TO TEL-CONSORCIO.
+        MOVE CONS2-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
+        MOVE CONS2-ESTADO TO ESTADO-CONSORCIO.
+        PERFORM LEER-CONS2.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       ULTIMO-REG-CONS3.
+        MOVE CONS3-DIR TO DIR-CONSORCIO.
+        MOVE CONS3-TEL TO TEL-CONSORCIO.
+        MOVE CONS3-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
+        MOVE CONS3-ESTADO TO ESTADO-CONSORCIO.
+        PERFORM LEER-CONS3.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CONS.
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
-       ULTIMO-REG.
+
+
