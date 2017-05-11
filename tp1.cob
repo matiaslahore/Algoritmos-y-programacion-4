@@ -139,6 +139,14 @@
        01  TEL-CONSORCIO PIC X(15).
        01  NOMBRE-CONSORCIO PIC X(30).
        01  ESTADO-CONSORCIO PIC 9(02) VALUE 0.
+       01  FECHA-ALTA-CONSORCIO.
+           03 FAC-ANIO   PIC 9(4).
+           03 FAC-MES    PIC 9(2). 
+           03 FAC-DIA    PIC 9(2). 
+       01  FECHA-BAJA-CONSORCIO.
+           03 FBC-ANIO   PIC 9(4).
+           03 FBC-MES    PIC 9(2). 
+           03 FBC-DIA    PIC 9(2). 
 
        01 TABLA-ESTADO.
           03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
@@ -156,6 +164,26 @@
            03 FILLER PIC X(32) VALUE SPACES.
            03 FILLER PIC X(9) VALUE "Hoja nro ".
            03 HOJA PIC 9(2).
+       01  CONSOR-BAJA-ROTULO.
+           03 FILLER PIC X(9) VALUE "CUIT-CONS".
+           03 FILLER PIC X(8) VALUE "FEC-ALTA".
+           03 FILLER PIC X(8) VALUE "FEC-BAJA".
+           03 FILLER PIC X(6) VALUE "NOMBRE".
+           03 FILLER PIC X(8) VALUE "TELEFONO".
+           03 FILLER PIC X(9) VALUE "DIRECCION".
+       01  CONSOR-BAJA.
+           03 IMPR-CUIT-CONS PIC 9(15).
+           03 IMPR-FECHA-ALTA-CONSORCIO.
+               05 IMPR-FAC-ANIO   PIC 9(4).
+               05 IMPR-FAC-MES    PIC 9(2). 
+               05 IMPR-FAC-DIA    PIC 9(2).
+           03 IMPR-FECHA-BAJA-CONSORCIO.
+               05 IMPR-FAC-ANIO   PIC 9(4).
+               05 IMPR-FAC-MES    PIC 9(2). 
+               05 IMPR-FAC-DIA    PIC 9(2).  
+           03 IMPR-NOMBRE PIC X(30) VALUE SPACES.
+           03 IMPR-TEL PIC X(15) VALUE SPACES.
+           03 IMPR-DIR PIC X(30) VALUE SPACES.
        01  TITULO.
            03 FILLER PIC X(15) VALUE SPACES.
            03 FILLER PIC X(29) VALUE "LISTADO DE CONSORCIOS DE BAJA".
@@ -164,6 +192,9 @@
            03 FILLER PIC X(32) VALUE "Total consorcios dados de baja: ".
            03 CANT-BAJAS PIC 9(3) VALUE 0.
            03 FILLER PIC X(25) VALUE SPACES.
+       01  IMPR-EST-LINEA.
+           03 IMPR-EST-ANIO PIC 9(4) VALUE 0.
+           03 IMPR-EST-CANT PIC 9(3) VALUE 0.
 
        PROCEDURE DIVISION.
        COMIENZO.
@@ -182,7 +213,6 @@
             PERFORM IMPR-ESTADISTICAS.
             PERFORM CERRAR-ARCHIVOS.
             STOP RUN.
-
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        INICIO.
@@ -250,6 +280,8 @@
            MOVE LINEA1 TO LINEA.
            DISPLAY LINEA.
            MOVE TITULO TO LINEA.
+           DISPLAY LINEA.
+           MOVE CONSOR-BAJA-ROTULO TO LINEA.
            DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -339,6 +371,8 @@
         MOVE CONS1-TEL TO TEL-CONSORCIO.
         MOVE CONS1-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
         MOVE CONS1-ESTADO TO ESTADO-CONSORCIO.
+        MOVE CONS1-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
+        MOVE CONS1-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
         PERFORM LEER-CONS1.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -347,6 +381,8 @@
         MOVE CONS2-TEL TO TEL-CONSORCIO.
         MOVE CONS2-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
         MOVE CONS2-ESTADO TO ESTADO-CONSORCIO.
+        MOVE CONS2-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
+        MOVE CONS2-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
         PERFORM LEER-CONS2.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -355,12 +391,30 @@
         MOVE CONS3-TEL TO TEL-CONSORCIO.
         MOVE CONS3-NOMBRE-CONSORCIO TO NOMBRE-CONSORCIO.
         MOVE CONS3-ESTADO TO ESTADO-CONSORCIO.
+        MOVE CONS3-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
+        MOVE CONS3-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
         PERFORM LEER-CONS3.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
+        MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
+        PERFORM IMPR-LISTADO UNTIL TABLA-ID-ESTADISTICAS-INDEX > 10.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPR-LISTADO.
+        MOVE TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX) TO IMPR-EST-ANIO.
+        MOVE TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX) TO IMPR-EST-CANT.
+        MOVE IMPR-EST-LINEA TO LINEA.
+        DISPLAY LINEA.
+        ADD 1 TO TABLA-ID-ESTADISTICAS-INDEX.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CONS.
-
-
+        MOVE MAE-CUIT-CONS TO IMPR-CUIT-CONS.
+        MOVE FECHA-ALTA-CONSORCIO TO IMPR-FECHA-ALTA-CONSORCIO.
+        MOVE FECHA-BAJA-CONSORCIO TO IMPR-FECHA-BAJA-CONSORCIO.
+        MOVE NOMBRE-CONSORCIO TO IMPR-NOMBRE.
+        MOVE TEL-CONSORCIO TO IMPR-TEL.
+        MOVE DIR-CONSORCIO TO IMPR-DIR.
+        MOVE CONSOR-BAJA TO LINEA.
+        DISPLAY LINEA.
