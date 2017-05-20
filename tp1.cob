@@ -110,7 +110,8 @@
            03 MAE-DIR    PIC X(30).
            03 MAE-CTA    PIC 9(8).
 
-       01  LINEA PIC X(60).
+       01  LINEA PIC X(106).
+       01  ANIO PIC 9(4).
 
        WORKING-STORAGE SECTION.
 
@@ -158,12 +159,13 @@
            03 FBC-MES    PIC 9(2).
            03 FBC-DIA    PIC 9(2).
 
-       01 TABLA-ESTADO.
-           03 TAB-ESTADO OCCURS 30 TIMES INDEXED BY TABLA-ID-EST-INDEX.
+       01  TABLA-ESTADO.
+           03 TAB-ESTADO OCCURS 30 TIMES
+           INDEXED BY TABLA-ID-EST-INDEX.
               05 TAB-EST-ESTADO PIC 9(2).
               05 TAB-EST-DESCRIP PIC X(15).
 
-       01 TABLA-ESTADISTICAS.
+       01  TABLA-ESTADISTICAS.
            03 TAB-ESTADIS OCCURS 10 TIMES
            INDEXED BY TABLA-ID-ESTADISTICAS-INDEX.
                05 TAB-ANIO PIC 9(4) VALUE 0.
@@ -223,7 +225,8 @@
            PERFORM CARGAR-TABLAS.
            PERFORM PROCESAR-ARCHIVOS UNTIL EOF-CONS1
                                       AND EOF-CONS2
-                                      AND EOF-CONS3.
+                                      AND EOF-CONS3
+                                      AND EOF-CTA.
       *      PERFORM IMPR-TOT-BAJAS.
       *      PERFORM IMPR-ESTADISTICAS.
            PERFORM CERRAR-ARCHIVOS.
@@ -260,6 +263,9 @@
            MOVE 1 TO SUBINDICE.
            PERFORM LEER-EST.
            PERFORM LLENAR-TABLA-EST UNTIL EOF-EST OR SUBINDICE > 30.
+           MOVE 1 TO SUBINDICE.
+           MOVE 2007 TO ANIO.
+           PERFORM LLENAR-ANIO-ESTADIS UNTIL SUBINDICE>10.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LLENAR-TABLA-EST.
@@ -267,6 +273,13 @@
            MOVE EST-DESCRIP  TO TAB-EST-DESCRIP(SUBINDICE).
            ADD 1 TO SUBINDICE.
            PERFORM LEER-EST.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       LLENAR-ANIO-ESTADIS.
+           MOVE ANIO TO TAB-ANIO(SUBINDICE).
+           MOVE 0 TO TAB-CANT(SUBINDICE).
+           ADD 1 TO ANIO.
+           ADD 1 TO SUBINDICE.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CONS1.
@@ -287,14 +300,14 @@
            READ CONS3
                AT END MOVE "10" TO FS-CONS3.
            IF FS-CONS3 NOT EQUAL ZERO AND "10"
-               DISPLAY 'ERROR AL LEER CONS3' FS-CONS3.
+               DISPLAY 'ERROR AL LEER CONS3 ' FS-CONS3.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CTA.
            READ CTA
                AT END MOVE "10" TO FS-CTA.
            IF FS-CTA NOT EQUAL ZERO AND "10"
-               DISPLAY 'ERROR AL LEER CTA' FS-CTA.
+               DISPLAY 'ERROR AL LEER CTA ' FS-CTA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CABECERA.
@@ -351,7 +364,8 @@
            IF MIN EQUAL CTA-CUIT-CONS
                MOVE CTA-NRO-CTA TO MAE-CTA.
                MOVE CTA-FECHA-ALTA TO MAE-FECHA-ALTA.
-           PERFORM LEER-CTA.
+           IF FS-CTA NOT EQUAL "10"
+               PERFORM LEER-CTA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        BUSCAR-ESTADO.
@@ -386,8 +400,8 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        EST-AGREGAR-NUEVO.
-           MOVE MAE-FECHA-ALTA TO TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX).
-           MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
+      *    MOVE MAE-FECHA-ALTA TO TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX).
+      *     MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ULTIMO-REG-CONS1.
