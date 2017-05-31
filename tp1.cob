@@ -116,9 +116,9 @@
        WORKING-STORAGE SECTION.
 
        77  FS-CONS1 PIC XX.
-            88 OK-CONS1 VALUE "00".
-            88 NO-CONS1 VALUE "23".
-            88 EOF-CONS1 VALUE "10".
+           88 OK-CONS1 VALUE "00".
+           88 NO-CONS1 VALUE "23".
+           88 EOF-CONS1 VALUE "10".
        77  FS-CONS2 PIC XX.
            88 OK-CONS2 VALUE "00".
            88 NO-CONS2 VALUE "23".
@@ -158,6 +158,7 @@
            03 FBC-ANIO   PIC 9(4).
            03 FBC-MES    PIC 9(2).
            03 FBC-DIA    PIC 9(2).
+       01  CUIT-CONSORCIO PIC 9(15).
 
        01  TABLA-ESTADO.
            03 TAB-ESTADO OCCURS 30 TIMES
@@ -174,34 +175,37 @@
        01  LINEA1.
            03 FILLER PIC X(7) VALUE "Fecha: ".
            03 FECHA PIC X(10).
-           03 FILLER PIC X(32) VALUE SPACES.
+           03 FILLER PIC X(62) VALUE SPACES.
            03 FILLER PIC X(9) VALUE "Hoja nro ".
            03 HOJA PIC 9(2).
 
        01  CONSOR-BAJA-ROTULO.
-           03 FILLER PIC X(10) VALUE "CUIT-CONS ".
+           03 FILLER PIC X(16) VALUE "CUIT-CONS       ".
            03 FILLER PIC X(9) VALUE "FEC-ALTA ".
            03 FILLER PIC X(9) VALUE "FEC-BAJA ".
-           03 FILLER PIC X(7) VALUE "NOMBRE ".
-           03 FILLER PIC X(9) VALUE "TELEFONO ".
-           03 FILLER PIC X(10) VALUE "DIRECCION ".
+           03 FILLER PIC X(30) VALUE "NOMBRE                        ".
+           03 FILLER PIC X(15) VALUE "TELEFONO       ".
+           03 FILLER PIC X(30) VALUE "DIRECCION                     ".
 
        01  CONSOR-BAJA.
            03 IMPR-CUIT-CONS PIC 9(15).
+           03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-FECHA-ALTA-CONSORCIO.
                05 IMPR-FAC-ANIO   PIC 9(4).
                05 IMPR-FAC-MES    PIC 9(2).
                05 IMPR-FAC-DIA    PIC 9(2).
+           03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-FECHA-BAJA-CONSORCIO.
                05 IMPR-FAC-ANIO   PIC 9(4).
                05 IMPR-FAC-MES    PIC 9(2).
                05 IMPR-FAC-DIA    PIC 9(2).
+           03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-NOMBRE PIC X(30) VALUE SPACES.
            03 IMPR-TEL PIC X(15) VALUE SPACES.
            03 IMPR-DIR PIC X(30) VALUE SPACES.
 
        01  TITULO.
-           03 FILLER PIC X(15) VALUE SPACES.
+           03 FILLER PIC X(25) VALUE SPACES.
            03 FILLER PIC X(29) VALUE "LISTADO DE CONSORCIOS DE BAJA".
            03 FILLER PIC X(16) VALUE SPACES.
 
@@ -212,6 +216,7 @@
 
        01  IMPR-EST-LINEA.
            03 IMPR-EST-ANIO PIC 9(4) VALUE 0.
+           03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-EST-CANT PIC 9(3) VALUE 0.
 
        PROCEDURE DIVISION.
@@ -227,8 +232,8 @@
                                       AND EOF-CONS2
                                       AND EOF-CONS3
                                       AND EOF-CTA.
-      *      PERFORM IMPR-TOT-BAJAS.
-      *      PERFORM IMPR-ESTADISTICAS.
+           PERFORM IMPR-TOT-BAJAS.
+           PERFORM IMPR-ESTADISTICAS.
            PERFORM CERRAR-ARCHIVOS.
            STOP RUN.
       *>-----------------------------------------------------------*
@@ -287,6 +292,8 @@
                AT END MOVE "10" TO FS-CONS1.
            IF FS-CONS1 NOT EQUAL "00" AND "10"
                DISPLAY 'ERROR AL LEER CONS1 FS: ' FS-CONS1.
+           IF FS-CONS1 EQUAL "10"
+               MOVE 000000000000999 TO CONS1-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CONS2.
@@ -294,6 +301,8 @@
                AT END MOVE "10" TO FS-CONS2.
            IF FS-CONS2 NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CONS2 FS: ' FS-CONS2.
+           IF FS-CONS2 EQUAL "10"
+               MOVE 000000000000999 TO CONS2-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CONS3.
@@ -301,6 +310,8 @@
                AT END MOVE "10" TO FS-CONS3.
            IF FS-CONS3 NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CONS3 ' FS-CONS3.
+           IF FS-CONS3 EQUAL "10"
+               MOVE 000000000000999 TO CONS3-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CTA.
@@ -308,6 +319,8 @@
                AT END MOVE "10" TO FS-CTA.
            IF FS-CTA NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CTA ' FS-CTA.
+           IF FS-CTA EQUAL "10"
+               MOVE 00000000000999 TO CTA-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CABECERA.
@@ -344,28 +357,28 @@
                PERFORM IMPR-CONS
                ADD 1 TO BAJAS.
            IF ESTADO-CONSORCIO <> 2
-               PERFORM BUSCAR-ESTADO.
-               PERFORM ESCRIBO-MAE.
-               ADD 1 TO ALTAS.
+               PERFORM BUSCAR-ESTADO
+               PERFORM ESCRIBO-MAE
+               ADD 1 TO ALTAS
                PERFORM BUSCAR-ESTADISTICAS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        DET-MIN.
-           MOVE CONS1-CUIT-CONS TO MIN.
-           IF MIN >= CONS2-CUIT-CONS
-               MOVE CONS2-CUIT-CONS TO MIN.
-           IF MIN >= CONS3-CUIT-CONS
-               MOVE CONS3-CUIT-CONS TO MIN.
-           IF MIN >= CTA-CUIT-CONS
-               MOVE CTA-CUIT-CONS TO MIN.
+               MOVE CONS1-CUIT-CONS TO MIN.
+               IF MIN >= CONS2-CUIT-CONS
+                   MOVE CONS2-CUIT-CONS TO MIN.
+               IF MIN >= CONS3-CUIT-CONS
+                   MOVE CONS3-CUIT-CONS TO MIN.
+               IF MIN >= CTA-CUIT-CONS
+                   MOVE CTA-CUIT-CONS TO MIN.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        POS-CTAS.
            IF MIN EQUAL CTA-CUIT-CONS
                MOVE CTA-NRO-CTA TO MAE-CTA.
-               MOVE CTA-FECHA-ALTA TO MAE-FECHA-ALTA.
-           IF FS-CTA NOT EQUAL "10"
-               PERFORM LEER-CTA.
+               MOVE CTA-FECHA-ALTA TO MAE-FECHA-ALTA
+               IF FS-CTA NOT EQUAL "10"
+                   PERFORM LEER-CTA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        BUSCAR-ESTADO.
@@ -382,6 +395,7 @@
            MOVE NOMBRE-CONSORCIO TO MAE-NOMBRE-CONSORCIO.
            MOVE TEL-CONSORCIO TO MAE-TEL.
            MOVE DIR-CONSORCIO TO MAE-DIR.
+           MOVE FECHA-ALTA-CONSORCIO TO MAE-FECHA-ALTA.
            WRITE REG-MAE.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -389,7 +403,8 @@
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
            SEARCH TAB-ESTADIS
                AT END PERFORM EST-AGREGAR-NUEVO
-           WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX) = MAE-FECHA-ALTA
+           WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX)
+               EQUAL MAE-ANIO
                ADD 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -411,6 +426,7 @@
            MOVE CONS1-ESTADO TO ESTADO-CONSORCIO.
            MOVE CONS1-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
            MOVE CONS1-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
+           MOVE CONS1-CUIT-CONS TO CUIT-CONSORCIO.
            PERFORM LEER-CONS1.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -435,6 +451,7 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
+           DISPLAY "ANIO CANT                                          "
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
            PERFORM IMPR-LISTADO UNTIL TABLA-ID-ESTADISTICAS-INDEX > 10.
       *>-----------------------------------------------------------*
