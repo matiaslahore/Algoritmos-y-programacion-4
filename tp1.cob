@@ -252,6 +252,8 @@
            IF FS-CTA NOT = "00"
                DISPLAY "Error en open cta FS: " FS-CTA.
            OPEN INPUT EST.
+           IF FS-EST NOT = "00"
+               DISPLAY "Error en open est FS: " FS-EST.
            OPEN OUTPUT MAE.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -293,7 +295,7 @@
            IF FS-CONS1 NOT EQUAL "00" AND "10"
                DISPLAY 'ERROR AL LEER CONS1 FS: ' FS-CONS1.
            IF FS-CONS1 EQUAL "10"
-               MOVE 000000000000999 TO CONS1-CUIT-CONS.
+               MOVE 999999999999999 TO CONS1-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CONS2.
@@ -302,7 +304,7 @@
            IF FS-CONS2 NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CONS2 FS: ' FS-CONS2.
            IF FS-CONS2 EQUAL "10"
-               MOVE 000000000000999 TO CONS2-CUIT-CONS.
+               MOVE 999999999999999 TO CONS2-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CONS3.
@@ -311,7 +313,7 @@
            IF FS-CONS3 NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CONS3 ' FS-CONS3.
            IF FS-CONS3 EQUAL "10"
-               MOVE 000000000000999 TO CONS3-CUIT-CONS.
+               MOVE 999999999999999 TO CONS3-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-CTA.
@@ -320,7 +322,7 @@
            IF FS-CTA NOT EQUAL ZERO AND "10"
                DISPLAY 'ERROR AL LEER CTA ' FS-CTA.
            IF FS-CTA EQUAL "10"
-               MOVE 00000000000999 TO CTA-CUIT-CONS.
+               MOVE 999999999999999 TO CTA-CUIT-CONS.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-CABECERA.
@@ -385,7 +387,7 @@
            MOVE 1 TO TABLA-ID-EST-INDEX.
            SEARCH TAB-ESTADO
                AT END MOVE 'SIN ESTADO' TO MAE-DESCRIP-ESTADO
-           WHEN TAB-EST-ESTADO(TABLA-ID-EST-INDEX) = EST-ESTADO
+           WHEN TAB-EST-ESTADO(TABLA-ID-EST-INDEX) = ESTADO-CONSORCIO
                MOVE TAB-EST-DESCRIP(TABLA-ID-EST-INDEX)
                TO MAE-DESCRIP-ESTADO.
       *>-----------------------------------------------------------*

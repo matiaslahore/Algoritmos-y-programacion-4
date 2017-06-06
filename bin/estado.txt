@@ -1,1 +1,3 @@
-02DESCRIPCIONESTA
+02Dado de Baja   
+01Vigente        
+03En tramite     
