@@ -66,7 +66,7 @@
                 05 CPR-MES    PIC 9(2).
                 05 CPR-DIA    PIC 9(2).
 
-       FD  WRK-CPR.
+       SD  WRK-CPR.
        01  REG-WORK-CPR.
            03 WORK-CPR-CUIT-CONS PIC 9(15).
            03 WORK-CPR-COD-PROV PIC 9(8).
@@ -96,7 +96,7 @@
                05 PRO-DIA PIC 9(2).
            03 PRO-CANT-CONS-ASIG PIC 9(3).
 
-       FD  WRK-PRO.
+       SD  WRK-PRO.
        01  WRK-REG-PRO.
            03 WRK-PRO-COD-PRO PIC 9(8).
            03 WRK-PRO-DIR PIC 9(30).
@@ -191,9 +191,19 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ORDENAR-PRO.
+           SORT WRK-PRO
+               ON ASCENDING KEY WRK-PRO-RUBRO
+                  ASCENDING KEY WRK-PRO-COD-PRO
+               USING PRO
+               GIVING OUT-PRO.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ORDENAR-CPR.
+           SORT WRK-CPR
+               ON ASCENDING KEY WORK-CPR-COD-PROV
+                  ASCENDING KEY WORK-CPR-CUIT-CONS
+               USING CPR
+               GIVING OUT-CPR.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-OUT-PRO.
@@ -215,15 +225,9 @@
            OPEN INPUT PRO.
            IF FS-PRO NOT = "00"
                DISPLAY "Error en open proveedores FS: " FS-PRO.
-           OPEN INPUT WRK-PRO.
-           IF FS-WRK-PRO NOT = "00"
-               DISPLAY "Error en open wrk-prov FS: " FS-WRK-PRO.
            OPEN INPUT OUT-PRO.
            IF FS-OUT-PRO NOT = "00"
                DISPLAY "Error en open wrk-prov FS: " FS-OUT-PRO.
-           OPEN INPUT WRK-CPR.
-           IF FS-WRK-CPR NOT = "00"
-               DISPLAY "Error en open wrk-prov FS: " FS-WRK-CPR.
            OPEN INPUT OUT-CPR.
            IF FS-OUT-CPR NOT = "00"
                DISPLAY "Error en open wrk-prov FS: " FS-OUT-CPR.
