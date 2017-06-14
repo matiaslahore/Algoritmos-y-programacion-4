@@ -1,10 +1,10 @@
-      ******************************************************************
-      * Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
-      *          Nicolas Outeda.
-      * Date: 14/6/2017 DD/MM/AAAA
-      * Purpose: TP Materia: Algoritmos y Programación IV
-      * Tectonics: cobc
-      ******************************************************************
+      *>*****************************************************************
+      *> Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
+      *>          Nicolas Outeda.
+      *> Date: 3/4/2017 DD/MM/AAAA
+      *> Purpose: TP Materia: Algoritmos y Programación IV
+      *> Tectonics: cobc
+      *>*****************************************************************
 
        IDENTIFICATION DIVISION.
        PROGRAM-ID. TP2.
@@ -256,19 +256,19 @@
                DISPLAY 'FIN MAE'.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
-      * LEER-CPR.
-      *     READ CPR
-      *         AT END MOVE "10" TO FS-CPR.
-      *     IF FS-CPR NOT EQUAL ZERO AND "10"
-      *         DISPLAY 'ERROR AL LEER CPR FS: ' FS-CPR.
-      *     IF FS-CPR EQUAL "10"
-      *         DISPLAY 'FIN CPR'
+      *> LEER-CPR.
+      *>     READ CPR
+      *>         AT END MOVE "10" TO FS-CPR.
+      *>     IF FS-CPR NOT EQUAL ZERO AND "10"
+      *>         DISPLAY 'ERROR AL LEER CPR FS: ' FS-CPR.
+      *>     IF FS-CPR EQUAL "10"
+      *>         DISPLAY 'FIN CPR'
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
-      * LEER-PRO.
-      *     READ PRO
-      *         AT END MOVE "10" TO FS-PRO.
-      *     IF FS-PRO NOT EQUAL ZERO AND "10"
-      *         DISPLAY 'ERROR AL LEER PRO ' FS-PRO.
+      *> LEER-PRO.
+      *>     READ PRO
+      *>         AT END MOVE "10" TO FS-PRO.
+      *>     IF FS-PRO NOT EQUAL ZERO AND "10"
+      *>         DISPLAY 'ERROR AL LEER PRO ' FS-PRO.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
