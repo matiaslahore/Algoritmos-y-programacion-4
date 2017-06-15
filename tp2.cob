@@ -156,6 +156,8 @@
            88 NO-OUT-CPR VALUE "23".
            88 EOF-OUT-CPR VALUE "10".
 
+       01  CUIT PIC 9(15) VALUE 0.
+
        PROCEDURE DIVISION.
        COMIENZO.
            PERFORM ABRIR-ARCHIVOS-PART-1.
@@ -170,7 +172,7 @@
            PERFORM LEER-OUT-PRO.
            PERFORM LEER-OUT-CPR.
            PERFORM LEER-MAE.
-           PERFORM ACTUALIZO-PROV-ASIGN UNTIL EOF-OUT-PRO.
+           PERFORM IMPRIMO-PROVEEDORES UNTIL EOF-OUT-PRO.
            PERFORM CERRAR-ARCHIVOS-PART-3.
            STOP RUN.
       *>-----------------------------------------------------------*
@@ -188,6 +190,22 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ACTUALIZO-PROV-ASIGN.
+           PERFORM INC-PROV-ASIGN UNTIL EOF-CPR AND CUIT > CPR-CUIT-CONS.
+           PERFORM LEER-MAE.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       INC-PROV-ASIGN.
+           IF CUIT = CPR-CUIT-CONS
+              PERFORM BUSCAR-PROV.
+              ADD 1 TO PRO-CANT-CONS-ASIG.
+           LEER-CPR.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       BUSCAR-PROV.
+           *>Faltaria agregar el codigo de buscar*
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMO-PROVEEDORES.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ORDENAR-PRO.
