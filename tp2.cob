@@ -20,9 +20,8 @@
                            RECORD KEY IS CPR-CUIT-CONS
                            FILE STATUS IS FS-CPR.
 
-           SELECT ARCH-ORD ASSIGN TO DISK "archOrd.txt"
-                           ORGANIZATION IS SEQUENTIAL
-                           FILE STATUS IS FS-ARCH-ORD.
+           SELECT ARCH-ORD ASSIGN TO DISK "orden.txt"
+                           SORT STATUS IS FS-ARCH-ORD.
 
            SELECT PRO      ASSIGN TO DISK "pro.txt"
                            ORGANIZATION IS INDEXED
@@ -77,6 +76,9 @@
                05 PRO-DIA PIC 9(2).
            03 PRO-CANT-CONS-ASIG PIC 9(3).
 
+       01  RUBRO-AUX PIC 9(4) VALUE 0.
+       01  TOTXRUBRO PIC 9(3) VALUE 0.
+       01  RUBROS-TOTALES PIC 9(3) VALUE 0.
        01  LINEA PIC X(106).
        01  ANIO PIC 9(4).
 
@@ -95,9 +97,9 @@
            88 NO-PRO VALUE "23".
            88 EOF-PRO VALUE "10".
        77  FS-ARCH-ORD PIC XX.
-           88 OK-ORD-CPR VALUE "00".
-           88 NO-ORD-CPR VALUE "23".
-           88 EOF-ORD-CPR VALUE "10".
+           88 OK-ORD VALUE "00".
+           88 NO-ORD VALUE "23".
+           88 EOF-ORD VALUE "10".
 
        01  CUIT PIC 9(15) VALUE 0.
 
@@ -130,7 +132,9 @@
       *>-----------------------------------------------------------*
        ACTUALIZO-CONS-AND-SORT.
            SORT ARCH-ORD
-                ON ASCENDING KEY ORD-RUBRO,ORD-COD-PROV,ORD-CUIT-CONS
+                ON ASCENDING KEY ORD-RUBRO
+                ON ASCENDING KEY ORD-COD-PROV
+                ON ASCENDING KEY ORD-CUIT-CONS
                 INPUT PROCEDURE IS ENTRADA
                 OUTPUT PROCEDURE IS SALIDA.
            STOP RUN.
@@ -139,7 +143,6 @@
        ENTRADA SECTION.
            PERFORM LEER-MAE.
            PERFORM PROCESAR-MAE UNTIL EOF-MAE.
-       SALIDA SECTION.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        PROCESAR-MAE.
@@ -171,6 +174,54 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        GRABO-SORT.
+           MOVE PRO-RUBRO TO ORD-RUBRO.
+           MOVE PRO-DESCRIP-RUBRO TO ORD-DESCR-RUBRO.
+           MOVE CPR-COD-PROV TO ORD-COD-PROV.
+           MOVE MAE-CUIT-CONS TO ORD-CUIT-CONS.
+           MOVE MAE-NOMBRE-CONSORCIO TO ORD-NOMB-CONS.
+           MOVE MAE-TEL TO ORD-TELEFONO.
+           MOVE MAE-DIR TO ORD-DIR.
+           RELEASE REG-ORD.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       SALIDA SECTION.
+           PERFORM IMPRIMIR-CABECERA.
+           RETURN ARCH-ORD AT END MOVE "10" TO FS-ARCH-ORD.
+           MOVE ORD-RUBRO TO RUBRO-AUX.
+           PERFORM PROCESO-ORD UNTIL EOF-ORD.
+
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       PROCESO-ORD.
+           PERFORM IMPRIMIR-RUBRO-DESCR.
+           PERFORM IMPRIMIR-FEAUTURE.
+           PERFORM PROCESO-RUBRO UNTIL RUBRO-AUX <> ORD-RUBRO.
+           PERFORM IMPRIMIR-TOTXRUBRO.
+           ADD 1 TO RUBROS-TOTALES.
+           MOVE 0 TO TOTXRUBRO.
+           MOVE ORD-RUBRO TO RUBRO-AUX.
+
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       PROCESO-RUBRO.
+           PERFORM IMPRIMIR-REG-ORD.
+           ADD 1 TO TOTXRUBRO.
+           RETURN ARCH-ORD AT END MOVE "10" TO FS-ARCH-ORD.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMIR-CABECERA.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMIR-RUBRO-DESCR.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMIR-FEAUTURE.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMIR-TOTXRUBRO.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       IMPRIMIR-REG-ORD.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        FIN.
