@@ -24,11 +24,6 @@
            SELECT ARCH-ORD ASSIGN TO DISK "orden.txt"
                            SORT STATUS IS FS-ARCH-ORD.
 
-           SELECT PRO      ASSIGN TO DISK "pro.txt"
-                           ORGANIZATION IS INDEXED
-                           RECORD KEY IS PRO-COD-PRO
-                           FILE STATUS IS FS-PRO.
-
        DATA DIVISION.
        FILE SECTION.
 
@@ -63,19 +58,6 @@
            03 ORD-NOMB-CONS PIC X(30).
            03 ORD-TELEFONO PIC X(15).
            03 ORD-DIR PIC X(30).
-
-       FD  PRO.
-       01  REG-PRO.
-           03 PRO-COD-PRO PIC 9(8).
-           03 PRO-DIR PIC 9(30).
-           03 PRO-TEL PIC X(15).
-           03 PRO-RUBRO PIC 9(4).
-           03 PRO-DESCRIP-RUBRO PIC X(15).
-           03 PRO-FECHA-ALTA.
-               05 PRO-ANIO PIC 9(4).
-               05 PRO-MES PIC 9(2).
-               05 PRO-DIA PIC 9(2).
-           03 PRO-CANT-CONS-ASIG PIC 9(3).
 
        WORKING-STORAGE SECTION.
 
@@ -179,7 +161,6 @@
                 ON ASCENDING KEY ORD-CUIT-CONS
                 INPUT PROCEDURE IS ENTRADA
                 OUTPUT PROCEDURE IS SALIDA.
-           STOP RUN.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ENTRADA SECTION.
@@ -216,8 +197,8 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        GRABO-SORT.
-           MOVE PRO-RUBRO TO ORD-RUBRO.
-           MOVE PRO-DESCRIP-RUBRO TO ORD-DESCR-RUBRO.
+           MOVE RUBRO TO ORD-RUBRO.
+           MOVE DESCRIP-RUBRO TO ORD-DESCR-RUBRO.
            MOVE CPR-COD-PROV TO ORD-COD-PROV.
            MOVE MAE-CUIT-CONS TO ORD-CUIT-CONS.
            MOVE MAE-NOMBRE-CONSORCIO TO ORD-NOMB-CONS.

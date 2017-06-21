@@ -49,7 +49,7 @@
             IF OP=1
                 OPEN I-O PROV
                 IF FS-PROV NOT = '00'
-                    DISPLAY "Error en open, FS: ", FS-PROV
+                    DISPLAY "Error en open prov, FS: ", FS-PROV
                     EXIT PROGRAM.
             IF OP=2
                 MOVE COD-PROV TO PRO-COD-PROV.
