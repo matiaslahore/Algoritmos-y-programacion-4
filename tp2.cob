@@ -10,6 +10,7 @@
        PROGRAM-ID. TP2.
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
+
        FILE-CONTROL.
            SELECT MAE      ASSIGN TO "maestro.txt"
                            ORGANIZATION IS LINE SEQUENTIAL
@@ -116,9 +117,9 @@
            03 DESCRIPCION-FEAUTURE PIC X(18) VALUE "DESCRIPCION-RUBRO ".
 
        01  RUBRO-DESCRIPCION.
-           03 RUBRO PIC X(4).
+           03 IMP-RUBRO PIC X(4).
            03 FILLER PIC X(1) VALUE SPACES.
-           03 DESCRIPCION PIC X(15).
+           03 IMP-DESCRIPCION PIC X(15).
 
        01  LISTADO-PROVEEDORES-FEATURE.
            03 FILLER PIC X(9) VALUE "COD-PROV ".
@@ -144,14 +145,20 @@
 
        01  LINEA PIC X(106).
 
+       01  OP PIC 9(1).
+       01  COD-PROV PIC 9(8).
+       01  RUBRO PIC 9(4).
+       01  DESCRIP-RUBRO PIC X(15).
+       01  COD-RET PIC 9(2).
+
        PROCEDURE DIVISION.
        COMIENZO.
            PERFORM INICIO.
-      *    OP = 1
-           PERFORM CALLSUBPRG.
+           MOVE 1 TO OP.
+           CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET
            PERFORM ACTUALIZO-CONS-AND-SORT.
-      *    OP = 3
-           PERFORM CALLSUBPRG.
+           MOVE 3 TO OP.
+           CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
            PERFORM FIN.
            STOP RUN.
       *>-----------------------------------------------------------*
@@ -163,12 +170,6 @@
            OPEN INPUT CPR.
            IF FS-CPR NOT = "00"
                DISPLAY "Error en open cuit-proveedores FS: " FS-CPR.
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
-       CALLSUBPRG.
-           OPEN INPUT PRO.
-           IF FS-PRO NOT = "00"
-               DISPLAY "Error en open proveedores FS: " FS-PRO.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ACTUALIZO-CONS-AND-SORT.
@@ -208,8 +209,8 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        PROCESAR-CPR.
-      * OP = 2
-           PERFORM CALLSUBPRG.
+           MOVE 2 TO OP.
+           CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
            PERFORM GRABO-SORT.
            READ CPR NEXT RECORD.
       *>-----------------------------------------------------------*
@@ -262,8 +263,8 @@
        IMPRIMIR-RUBRO-DESCR.
            MOVE RUBRO-DESCRIPCION-FEAUTURE TO LINEA.
            DISPLAY LINEA.
-           MOVE ORD-RUBRO TO RUBRO.
-           MOVE ORD-DESCR-RUBRO TO DESCRIPCION.
+           MOVE ORD-RUBRO TO IMP-RUBRO.
+           MOVE ORD-DESCR-RUBRO TO IMP-DESCRIPCION.
            MOVE RUBRO-DESCRIPCION TO LINEA.
            DISPLAY LINEA.
       *>-----------------------------------------------------------*
