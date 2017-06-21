@@ -76,12 +76,6 @@
                05 PRO-DIA PIC 9(2).
            03 PRO-CANT-CONS-ASIG PIC 9(3).
 
-       01  RUBRO-AUX PIC 9(4) VALUE 0.
-       01  TOTXRUBRO PIC 9(3) VALUE 0.
-       01  RUBROS-TOTALES PIC 9(3) VALUE 0.
-       01  LINEA PIC X(106).
-       01  ANIO PIC 9(4).
-
        WORKING-STORAGE SECTION.
 
        77  FS-MAE PIC XX.
@@ -101,7 +95,54 @@
            88 NO-ORD VALUE "23".
            88 EOF-ORD VALUE "10".
 
-       01  CUIT PIC 9(15) VALUE 0.
+       01  RUBRO-AUX PIC 9(4) VALUE 0.
+       01  TOTXRUBRO PIC 9(3) VALUE 0.
+       01  RUBROS-TOTALES PIC 9(3) VALUE 0.
+
+       01  LINEA1.
+           03 FILLER PIC X(7) VALUE "Fecha: ".
+           03 FECHA PIC X(10).
+           03 FILLER PIC X(62) VALUE SPACES.
+           03 FILLER PIC X(9) VALUE "Hoja nro ".
+           03 HOJA PIC 9(2).
+
+       01  TITULO.
+           03 FILLER PIC X(25) VALUE SPACES.
+           03 FILLER PIC X(30) VALUE "LISTA DE PROVEEDORES ASIGNADOS".
+           03 FILLER PIC X(15) VALUE SPACES.
+
+       01  RUBRO-DESCRIPCION-FEAUTURE.
+           03 RUBRO-FEAUTURE PIC X(6) VALUE "RUBRO ".
+           03 DESCRIPCION-FEAUTURE PIC X(18) VALUE "DESCRIPCION-RUBRO ".
+
+       01  RUBRO-DESCRIPCION.
+           03 RUBRO PIC X(4).
+           03 FILLER PIC X(1) VALUE SPACES.
+           03 DESCRIPCION PIC X(15).
+
+       01  LISTADO-PROVEEDORES-FEATURE.
+           03 FILLER PIC X(9) VALUE "COD-PROV ".
+           03 FILLER PIC X(15) VALUE "CUIT-CONSORCIO ".
+           03 FILLER PIC X(17) VALUE "NOMBRE-CONSORCIO ".
+           03 FILLER PIC X(9) VALUE "TEL-CONS ".
+           03 FILLER PIC X(9) VALUE "DIR-CONS ".
+
+       01  LISTADO-PROVEEDORES.
+           03 IMP-COD-PROV PIC 9(8).
+           03 FILLER PIC X(1) VALUE SPACES.
+           03 IMP-CUIT-CONS PIC 9(15).
+           03 FILLER PIC X(1) VALUE SPACES.
+           03 IMP-NOMB-CONS PIC X(30).
+           03 FILLER PIC X(1) VALUE SPACES.
+           03 IMP-TELEFONO PIC X(15).
+           03 FILLER PIC X(1) VALUE SPACES.
+           03 IMP-DIR PIC X(30).
+
+       01  TOTAL-PROV-RUBRO.
+           03 FILLER PIC X(29) VALUE "Total proveedores por rubro: ".
+           03 IMP-TOTXRUBRO PIC X(3).
+
+       01  LINEA PIC X(106).
 
        PROCEDURE DIVISION.
        COMIENZO.
@@ -210,18 +251,42 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-CABECERA.
+           MOVE "2017/06/22" TO FECHA.
+           MOVE 1 TO HOJA.
+           MOVE LINEA1 TO LINEA.
+           DISPLAY LINEA.
+           MOVE TITULO TO LINEA.
+           DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-RUBRO-DESCR.
+           MOVE RUBRO-DESCRIPCION-FEAUTURE TO LINEA.
+           DISPLAY LINEA.
+           MOVE ORD-RUBRO TO RUBRO.
+           MOVE ORD-DESCR-RUBRO TO DESCRIPCION.
+           MOVE RUBRO-DESCRIPCION TO LINEA.
+           DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-FEAUTURE.
+           MOVE LISTADO-PROVEEDORES-FEATURE TO LINEA.
+           DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-TOTXRUBRO.
+           MOVE TOTXRUBRO TO IMP-TOTXRUBRO.
+           MOVE TOTAL-PROV-RUBRO TO LINEA.
+           DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-REG-ORD.
+           MOVE ORD-COD-PROV TO IMP-COD-PROV.
+           MOVE ORD-CUIT-CONS TO IMP-CUIT-CONS.
+           MOVE ORD-NOMB-CONS TO IMP-NOMB-CONS.
+           MOVE ORD-TELEFONO TO IMP-TELEFONO.
+           MOVE ORD-DIR TO IMP-DIR.
+           MOVE LISTADO-PROVEEDORES TO LINEA.
+           DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        FIN.
