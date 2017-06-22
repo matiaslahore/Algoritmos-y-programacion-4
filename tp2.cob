@@ -16,8 +16,9 @@
                            ORGANIZATION IS LINE SEQUENTIAL
                            FILE STATUS IS FS-MAE.
 
-           SELECT CPR      ASSIGN TO DISK "cpr.txt"
+           SELECT CPR      ASSIGN TO RANDOM "cpr.txt"
                            ORGANIZATION IS INDEXED
+                           ACCESS MODE IS DYNAMIC
                            RECORD KEY IS CPR-CUIT-CONS
                            FILE STATUS IS FS-CPR.
 

@@ -345,6 +345,8 @@
       *>-----------------------------------------------------------*
        PROCESAR-ARCHIVOS.
            PERFORM DET-MIN.
+      *    SI NO EXISTE NUMERO DE CUENTA LO DEJO INICIALIZADO EN 0
+           MOVE 00000000 TO MAE-CTA
            PERFORM POS-CTAS.
            IF MIN EQUAL CONS1-CUIT-CONS
               PERFORM ULTIMO-REG-CONS1 UNTIL EOF-CONS1
@@ -377,7 +379,7 @@
       *>-----------------------------------------------------------*
        POS-CTAS.
            IF MIN EQUAL CTA-CUIT-CONS
-               MOVE CTA-NRO-CTA TO MAE-CTA.
+               MOVE CTA-NRO-CTA TO MAE-CTA
                MOVE CTA-FECHA-ALTA TO MAE-FECHA-ALTA
                IF FS-CTA NOT EQUAL "10"
                    PERFORM LEER-CTA.
