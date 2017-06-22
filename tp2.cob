@@ -2,7 +2,7 @@
       *> Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
       *>          Nicolas Outeda.
       *> Date: 3/4/2017 DD/MM/AAAA
-      *> Purpose: TP Materia: Algoritmos y Programación IV
+      *> Purpose: TP Materia: Algoritmos y Programacion IV
       *> Tectonics: cobc
       *>*****************************************************************
 

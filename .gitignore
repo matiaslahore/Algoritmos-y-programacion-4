@@ -1,2 +1,7 @@
 MAE
 tp1
+*.c
+*.h
+*.so
+*.o
+.DS_STORE

@@ -1,7 +1,7 @@
       ******************************************************************
       * Author: Santiago Sosa Montiel, Matias Lahore
       * Date:2017/06/21
-      * Purpose: Trabajo Práctico, Algoritmos y Programación IV
+      * Purpose: Trabajo Practico, Algoritmos y Programacion IV
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
