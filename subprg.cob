@@ -10,7 +10,7 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT PROV     ASSIGN TO RANDOM "prov.txt"
+           SELECT PROV     ASSIGN TO RANDOM "prov_indexed.txt"
                            ORGANIZATION IS INDEXED
                            ACCESS MODE IS RANDOM
                            RECORD KEY IS PRO-COD-PROV
