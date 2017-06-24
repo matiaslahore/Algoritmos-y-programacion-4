@@ -20,6 +20,7 @@
                            ORGANIZATION IS INDEXED
                            ACCESS MODE IS DYNAMIC
                            RECORD KEY IS CPR-CUIT-CONS
+                           ALTERNATE KEY IS CPR-COD-PROV
                            FILE STATUS IS FS-CPR.
 
            SELECT ARCH-ORD ASSIGN TO DISK "orden.txt"
@@ -138,7 +139,7 @@
        COMIENZO.
            PERFORM INICIO.
            MOVE 1 TO OP.
-           CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET
+           CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
            PERFORM ACTUALIZO-CONS-AND-SORT.
            MOVE 3 TO OP.
            CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
@@ -165,8 +166,14 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ENTRADA SECTION.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
            PERFORM LEER-MAE.
            PERFORM PROCESAR-MAE UNTIL EOF-MAE.
+
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       FUNCIONES-ENTRADA SECTION.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        PROCESAR-MAE.
@@ -175,23 +182,22 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        BUSCAR-PROV.
-           MOVE MAE-CUIT-CONS TO CPR-CUIT-CONS
+           MOVE MAE-CUIT-CONS TO CPR-CUIT-CONS.
+           MOVE 00000000 TO CPR-COD-PROV.
            START CPR KEY IS EQUAL CPR-CUIT-CONS.
-           IF NOT OK-CPR
-               IF NO-CPR
-                   DISPLAY "Cuit no encontrado"
-               ELSE
-                   DISPLAY "Error, FS: " FS-CPR
+           IF NO-CPR
+      *         DISPLAY "Cuit no encontrado"
            ELSE
-                  READ CPR NEXT RECORD.
-                  IF NOT OK-CPR AND NOT EOF-CPR
-                      DISPLAY "Error, FS: " FS-CPR.
-                  PERFORM PROCESAR-CPR
-                      UNTIL EOF-CPR OR CPR-CUIT-CONS <> MAE-CUIT-CONS.
+               READ CPR NEXT RECORD
+               PERFORM PROCESAR-CPR
+                   UNTIL EOF-CPR
+                   OR CPR-CUIT-CONS NOT EQUAL MAE-CUIT-CONS
+           END-IF.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        PROCESAR-CPR.
            MOVE 2 TO OP.
+           MOVE CPR-COD-PROV TO COD-PROV.
            CALL "SUBPRG" USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
            PERFORM GRABO-SORT.
            READ CPR NEXT RECORD.
@@ -213,13 +219,15 @@
            RETURN ARCH-ORD AT END MOVE "10" TO FS-ARCH-ORD.
            MOVE ORD-RUBRO TO RUBRO-AUX.
            PERFORM PROCESO-ORD UNTIL EOF-ORD.
-
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       FUNCIONES-SALIDA SECTION.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        PROCESO-ORD.
            PERFORM IMPRIMIR-RUBRO-DESCR.
            PERFORM IMPRIMIR-FEAUTURE.
-           PERFORM PROCESO-RUBRO UNTIL RUBRO-AUX <> ORD-RUBRO.
+           PERFORM PROCESO-RUBRO UNTIL RUBRO-AUX NOT EQUAL ORD-RUBRO.
            PERFORM IMPRIMIR-TOTXRUBRO.
            ADD 1 TO RUBROS-TOTALES.
            MOVE 0 TO TOTXRUBRO.
@@ -230,7 +238,9 @@
        PROCESO-RUBRO.
            PERFORM IMPRIMIR-REG-ORD.
            ADD 1 TO TOTXRUBRO.
-           RETURN ARCH-ORD AT END MOVE "10" TO FS-ARCH-ORD.
+           RETURN ARCH-ORD
+               AT END MOVE "10" TO FS-ARCH-ORD
+               MOVE 9999 TO ORD-RUBRO.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-CABECERA.
@@ -278,9 +288,10 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-MAE.
+           IF FS-MAE NOT EQUAL "10"
            READ MAE
-               AT END MOVE "10" TO FS-MAE.
-           IF FS-MAE NOT EQUAL "00" AND "10"
-               DISPLAY 'ERROR AL LEER MAE FS: ' FS-MAE.
-           IF FS-MAE EQUAL "10"
-               DISPLAY 'FIN MAE'.
+               AT END MOVE "10" TO FS-MAE
+           END-IF.
+           IF FS-MAE NOT EQUAL "00" AND FS-MAE NOT EQUAL "10"
+               DISPLAY 'ERROR AL LEER MAE FS: ' FS-MAE
+           END-IF.

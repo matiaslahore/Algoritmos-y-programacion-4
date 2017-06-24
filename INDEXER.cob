@@ -12,7 +12,7 @@
                                ORGANIZATION IS INDEXED
                                RECORD KEY IS CPR-INDEX-CUIT-CONS
                                ALTERNATE RECORD KEY IS
-                                             CPR-INDEX-COD-PROV.
+                                   CPR-INDEX-COD-PROV WITH DUPLICATES.
 
            SELECT PROV         ASSIGN TO DISK "prov.txt"
                                ORGANIZATION IS LINE SEQUENTIAL

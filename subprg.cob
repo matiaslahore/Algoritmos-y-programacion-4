@@ -47,25 +47,37 @@
 
        PROCEDURE DIVISION USING OP,COD-PROV,RUBRO,DESCRIP-RUBRO,COD-RET.
        MAIN-PROCEDURE.
-            IF OP=1
-                OPEN I-O PROV
-                IF FS-PROV NOT = '00'
-                    DISPLAY "Error en open prov, FS: ", FS-PROV
-                    EXIT PROGRAM.
-            IF OP=2
-                MOVE COD-PROV TO PRO-COD-PROV.
-                READ PROV RECORD
-                IF OK-PROV
-                    ADD 1 TO PRO-CANT-CONS-ASIG
-                    REWRITE REG-PROV
-                    MOVE PRO-RUBRO TO RUBRO
-                    MOVE PRO-DESCR-RUBRO TO DESCRIP-RUBRO
-                    MOVE FS-PROV TO COD-RET
-                ELSE
-                    MOVE FS-PROV TO COD-RET.
-                EXIT PROGRAM.
-            IF OP=3
-                CLOSE PROV
-                EXIT PROGRAM.
+           MOVE 00 TO COD-RET.
+
+           IF OP=1
+               OPEN I-O PROV
+               IF FS-PROV NOT = '00'
+                   DISPLAY "Error en open prov, FS: ", FS-PROV
+                   EXIT PROGRAM
+               END-IF
+           END-IF.
+
+           IF OP=2
+               MOVE COD-PROV TO PRO-COD-PROV
+               READ PROV RECORD
+               IF OK-PROV
+                   ADD 1 TO PRO-CANT-CONS-ASIG
+                   REWRITE REG-PROV
+                   MOVE PRO-RUBRO TO RUBRO
+                   MOVE PRO-DESCR-RUBRO TO DESCRIP-RUBRO
+                   MOVE FS-PROV TO COD-RET
+               ELSE
+                   MOVE FS-PROV TO COD-RET
+               END-IF
+               EXIT PROGRAM
+           END-IF.
+
+           IF OP=3
+               CLOSE PROV
+               EXIT PROGRAM
+           END-IF.
+
+           MOVE 01 TO COD-RET
+           EXIT PROGRAM.
 
        END PROGRAM SUBPRG.
