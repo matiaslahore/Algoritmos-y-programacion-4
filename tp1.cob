@@ -106,7 +106,7 @@
                 05 MAE-DIA    PIC 9(2).
            03 MAE-DESCRIP-ESTADO    PIC X(15).
            03 MAE-NOMBRE-CONSORCIO    PIC X(30).
-           03 MAE-TEL    PIC 9(15).
+           03 MAE-TEL    PIC X(15).
            03 MAE-DIR    PIC X(30).
            03 MAE-CTA    PIC 9(8).
 
@@ -175,14 +175,14 @@
        01  LINEA1.
            03 FILLER PIC X(7) VALUE "Fecha: ".
            03 FECHA PIC X(10).
-           03 FILLER PIC X(62) VALUE SPACES.
+           03 FILLER PIC X(66) VALUE SPACES.
            03 FILLER PIC X(9) VALUE "Hoja nro ".
            03 HOJA PIC 9(2).
 
        01  CONSOR-BAJA-ROTULO.
            03 FILLER PIC X(16) VALUE "CUIT-CONS       ".
-           03 FILLER PIC X(9) VALUE "FEC-ALTA ".
-           03 FILLER PIC X(9) VALUE "FEC-BAJA ".
+           03 FILLER PIC X(11) VALUE "FEC-ALTA   ".
+           03 FILLER PIC X(11) VALUE "FEC-BAJA   ".
            03 FILLER PIC X(30) VALUE "NOMBRE                        ".
            03 FILLER PIC X(15) VALUE "TELEFONO       ".
            03 FILLER PIC X(30) VALUE "DIRECCION                     ".
@@ -192,20 +192,24 @@
            03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-FECHA-ALTA-CONSORCIO.
                05 IMPR-FAC-ANIO   PIC 9(4).
+               05 FILLER PIC X(1) VALUE "/".
                05 IMPR-FAC-MES    PIC 9(2).
+               05 FILLER PIC X(1) VALUE "/".
                05 IMPR-FAC-DIA    PIC 9(2).
            03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-FECHA-BAJA-CONSORCIO.
-               05 IMPR-FAC-ANIO   PIC 9(4).
-               05 IMPR-FAC-MES    PIC 9(2).
-               05 IMPR-FAC-DIA    PIC 9(2).
+               05 IMPR-FBC-ANIO   PIC 9(4).
+               05 FILLER PIC X(1) VALUE "/".
+               05 IMPR-FBC-MES    PIC 9(2).
+               05 FILLER PIC X(1) VALUE "/".
+               05 IMPR-FBC-DIA    PIC 9(2).
            03 FILLER PIC X(1) VALUE SPACES.
            03 IMPR-NOMBRE PIC X(30) VALUE SPACES.
            03 IMPR-TEL PIC X(15) VALUE SPACES.
            03 IMPR-DIR PIC X(30) VALUE SPACES.
 
        01  TITULO.
-           03 FILLER PIC X(25) VALUE SPACES.
+           03 FILLER PIC X(28) VALUE SPACES.
            03 FILLER PIC X(29) VALUE "LISTADO DE CONSORCIOS DE BAJA".
            03 FILLER PIC X(16) VALUE SPACES.
 
@@ -330,10 +334,13 @@
            MOVE 1 TO HOJA.
            MOVE LINEA1 TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
            MOVE TITULO TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
            MOVE CONSOR-BAJA-ROTULO TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LEER-EST.
@@ -413,9 +420,11 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-TOT-BAJAS.
+           DISPLAY " ".
            MOVE BAJAS TO CANT-BAJAS.
            MOVE IMP-BAJAS TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        EST-AGREGAR-NUEVO.
@@ -470,8 +479,14 @@
       *>-----------------------------------------------------------*
        IMPR-CONS.
            MOVE MIN TO IMPR-CUIT-CONS.
-           MOVE FECHA-ALTA-CONSORCIO TO IMPR-FECHA-ALTA-CONSORCIO.
-           MOVE FECHA-BAJA-CONSORCIO TO IMPR-FECHA-BAJA-CONSORCIO.
+      *     MOVE FECHA-ALTA-CONSORCIO TO IMPR-FECHA-ALTA-CONSORCIO.
+      *     MOVE FECHA-BAJA-CONSORCIO TO IMPR-FECHA-BAJA-CONSORCIO.
+           MOVE FAC-ANIO TO IMPR-FAC-ANIO.
+           MOVE FAC-MES TO IMPR-FAC-MES.
+           MOVE FAC-DIA TO IMPR-FAC-DIA.
+           MOVE FBC-ANIO TO IMPR-FBC-ANIO.
+           MOVE FBC-MES TO IMPR-FBC-MES.
+           MOVE FBC-DIA TO IMPR-FBC-DIA.
            MOVE NOMBRE-CONSORCIO TO IMPR-NOMBRE.
            MOVE TEL-CONSORCIO TO IMPR-TEL.
            MOVE DIR-CONSORCIO TO IMPR-DIR.

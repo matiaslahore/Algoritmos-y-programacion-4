@@ -19,7 +19,7 @@
                                FILE STATUS IS FS-PROV.
 
            SELECT PROV-INDEX   ASSIGN TO "prov_indexed.txt"
-                               ACCESS MODE IS RANDOM
+                               ACCESS MODE IS SEQUENTIAL
                                ORGANIZATION IS INDEXED
                                RECORD KEY IS PRO-INDEX-COD-PROV
                                FILE STATUS IS FS-PROV-INDEX.
@@ -42,16 +42,16 @@
 
        FD  PROV-INDEX.
        01  REG-PROV-INDEX.
-           03 PRO-INDEX-COD-PROV PIC 9(8).
-           03 PRO-INDEX-DIR PIC X(30).
-           03 PRO-INDEX-TEL PIC X(15).
-           03 PRO-INDEX-RUBRO PIC 9(4).
-           03 PRO-INDEX-DESCR-RUBRO PIC X(15).
+           03 PRO-INDEX-COD-PROV PIC 9(8) VALUE ZEROES.
+           03 PRO-INDEX-DIR PIC X(30) VALUE SPACES.
+           03 PRO-INDEX-TEL PIC X(15) VALUE SPACES.
+           03 PRO-INDEX-RUBRO PIC 9(4) VALUE ZEROES.
+           03 PRO-INDEX-DESCR-RUBRO PIC X(15) VALUE SPACES.
            03 PRO-INDEX-FECHA-ALTA.
-               05 PRO-INDEX-ANIO PIC 9(4).
-               05 PRO-INDEX-MES PIC 9(2).
-               05 PRO-INDEX-DIA PIC 9(2).
-           03 PRO-INDEX-CANT-CONS-ASIG PIC 9(3).
+               05 PRO-INDEX-ANIO PIC 9(4) VALUE ZEROES.
+               05 PRO-INDEX-MES PIC 9(2) VALUE ZEROES.
+               05 PRO-INDEX-DIA PIC 9(2) VALUE ZEROES.
+           03 PRO-INDEX-CANT-CONS-ASIG PIC 9(3) VALUE ZEROES.
 
        FD  CPR.
        01  REG-CPR.
@@ -96,9 +96,7 @@
        PROCEDURE DIVISION.
        MAIN.
            OPEN INPUT CPR.
-           OPEN INPUT PROV.
            OPEN OUTPUT CPR-INDEX.
-           OPEN OUTPUT PROV-INDEX.
            PERFORM CONVERTIR-CPR.
            PERFORM CONVERTIR-PROV.
            CLOSE CPR.
@@ -121,7 +119,10 @@
            PERFORM LEER-CPR.
 
        CONVERTIR-PROV.
+           OPEN INPUT PROV.
+           OPEN OUTPUT PROV-INDEX.
            PERFORM LEER-PROV.
+           DISPLAY PRO-DIR.
            PERFORM PROCESAR-PROV UNTIL EOF-PROV.
 
        LEER-PROV.
@@ -131,13 +132,15 @@
            MOVE REG-PROV TO REG-PROV-INDEX.
            WRITE REG-PROV-INDEX.
            PERFORM LEER-PROV.
+           DISPLAY PRO-DIR.
 
        MOSTRAR-RESULTADO.
            OPEN INPUT CPR-INDEX.
            OPEN INPUT PROV-INDEX.
            READ CPR-INDEX RECORD.
            PERFORM LISTAR-CPR UNTIL EOF-CPR-INDEX.
-           PERFORM PROBAR-PROV.
+           READ PROV-INDEX RECORD.
+           PERFORM PROBAR-PROV UNTIL EOF-PROV-INDEX.
            CLOSE CPR-INDEX.
            CLOSE PROV-INDEX.
 
@@ -146,11 +149,7 @@
            READ CPR-INDEX RECORD AT END MOVE "10" TO FS-CPR-INDEX.
 
        PROBAR-PROV.
-           MOVE 33333333 TO PRO-INDEX-COD-PROV.
-           READ PROV-INDEX RECORD.
-           DISPLAY REG-PROV-INDEX.
-           MOVE 22222222 TO PRO-INDEX-COD-PROV.
-           READ PROV-INDEX RECORD.
-           DISPLAY REG-PROV-INDEX.
+           DISPLAY REG-PROV-INDEX
+           READ PROV-INDEX RECORD AT END MOVE "10" TO FS-PROV-INDEX.
 
        END PROGRAM INDEXER.

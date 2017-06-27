@@ -38,7 +38,7 @@
                 05 MAE-DIA    PIC 9(2).
            03 MAE-DESCRIP-ESTADO    PIC X(15).
            03 MAE-NOMBRE-CONSORCIO    PIC X(30).
-           03 MAE-TEL    PIC 9(15).
+           03 MAE-TEL    PIC X(15).
            03 MAE-DIR    PIC X(30).
            03 MAE-CTA    PIC 9(8).
 
@@ -97,19 +97,23 @@
            03 FILLER PIC X(15) VALUE SPACES.
 
        01  RUBRO-DESCRIPCION-FEAUTURE.
-           03 RUBRO-FEAUTURE PIC X(6) VALUE "RUBRO ".
-           03 DESCRIPCION-FEAUTURE PIC X(18) VALUE "DESCRIPCION-RUBRO ".
-
-       01  RUBRO-DESCRIPCION.
+           03 RUBRO-FEAUTURE PIC X(7) VALUE "RUBRO: ".
            03 IMP-RUBRO PIC X(4).
+           03 FILLER PIC X(2) VALUE SPACES.
+           03 DESCRIPCION-FEAUTURE PIC X(18) VALUE "DESCRIPCION-RUBRO:".
            03 FILLER PIC X(1) VALUE SPACES.
-           03 IMP-DESCRIPCION PIC X(15).
+           03 IMP-DESCR-RUBRO PIC X(15) VALUE SPACES.
+
+      * 01  RUBRO-DESCRIPCION.
+      *     03 IMP-RUBRO PIC X(4).
+      *     03 FILLER PIC X(2) VALUE SPACES.
+      *     03 IMP-DESCRIPCION PIC X(15) VALUE SPACES.
 
        01  LISTADO-PROVEEDORES-FEATURE.
            03 FILLER PIC X(9) VALUE "COD-PROV ".
-           03 FILLER PIC X(15) VALUE "CUIT-CONSORCIO ".
-           03 FILLER PIC X(17) VALUE "NOMBRE-CONSORCIO ".
-           03 FILLER PIC X(9) VALUE "TEL-CONS ".
+           03 FILLER PIC X(16) VALUE "CUIT-CONSORCIO  ".
+           03 FILLER PIC X(31) VALUE "NOMBRE-CONSORCIO               ".
+           03 FILLER PIC X(16) VALUE "TEL-CONS        ".
            03 FILLER PIC X(9) VALUE "DIR-CONS ".
 
        01  LISTADO-PROVEEDORES.
@@ -248,17 +252,24 @@
            MOVE 1 TO HOJA.
            MOVE LINEA1 TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
            MOVE TITULO TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-RUBRO-DESCR.
+           MOVE ORD-RUBRO TO IMP-RUBRO.
+           MOVE ORD-DESCR-RUBRO TO IMP-DESCR-RUBRO.
            MOVE RUBRO-DESCRIPCION-FEAUTURE TO LINEA.
            DISPLAY LINEA.
-           MOVE ORD-RUBRO TO IMP-RUBRO.
-           MOVE ORD-DESCR-RUBRO TO IMP-DESCRIPCION.
-           MOVE RUBRO-DESCRIPCION TO LINEA.
-           DISPLAY LINEA.
+           DISPLAY " ".
+      *     MOVE RUBRO-DESCRIPCION-FEAUTURE TO LINEA.
+      *     DISPLAY LINEA.
+      *     MOVE ORD-RUBRO TO IMP-RUBRO.
+      *     MOVE ORD-DESCR-RUBRO TO IMP-DESCRIPCION.
+      *     MOVE RUBRO-DESCRIPCION TO LINEA.
+      *     DISPLAY LINEA.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-FEAUTURE.
@@ -267,9 +278,11 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-TOTXRUBRO.
+           DISPLAY " ".
            MOVE TOTXRUBRO TO IMP-TOTXRUBRO.
            MOVE TOTAL-PROV-RUBRO TO LINEA.
            DISPLAY LINEA.
+           DISPLAY " ".
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPRIMIR-REG-ORD.
