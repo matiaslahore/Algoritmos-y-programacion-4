@@ -1,10 +1,10 @@
-      ******************************************************************
-      * Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
-      *          Nicolas Outeda.
-      * Date: 3/4/2017 DD/MM/AAAA
-      * Purpose: TP Materia: Algoritmos y Programacion IV
-      * Tectonics: cobc
-      ******************************************************************
+      *>*****************************************************************
+      *> Authors: Santiago Sosa Montiel, Matias Lahore, Matias Tebele,
+      *>          Nicolas Outeda.
+      *> Date: 3/4/2017 DD/MM/AAAA
+      *> Purpose: TP Materia: Algoritmos y Programacion IV
+      *> Tectonics: cobc
+      *>*****************************************************************
 
        IDENTIFICATION DIVISION.
        PROGRAM-ID. TP.
@@ -159,6 +159,7 @@
            03 FBC-MES    PIC 9(2).
            03 FBC-DIA    PIC 9(2).
        01  CUIT-CONSORCIO PIC 9(15).
+       01  INC-ALTAS PIC 9(15) VALUE 1.
 
        01  TABLA-ESTADO.
            03 TAB-ESTADO OCCURS 30 TIMES
@@ -352,7 +353,7 @@
       *>-----------------------------------------------------------*
        PROCESAR-ARCHIVOS.
            PERFORM DET-MIN.
-      *    SI NO EXISTE NUMERO DE CUENTA LO DEJO INICIALIZADO EN 0
+      *>    SI NO EXISTE NUMERO DE CUENTA LO DEJO INICIALIZADO EN 0
            MOVE 00000000 TO MAE-CTA
            PERFORM POS-CTAS.
            IF MIN EQUAL CONS1-CUIT-CONS
@@ -370,6 +371,7 @@
            IF ESTADO-CONSORCIO <> 2
                PERFORM BUSCAR-ESTADO
                PERFORM ESCRIBO-MAE
+           IF ESTADO-CONSORCIO = 1
                ADD 1 TO ALTAS
                PERFORM BUSCAR-ESTADISTICAS.
       *>-----------------------------------------------------------*
@@ -414,8 +416,8 @@
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
            SEARCH TAB-ESTADIS
                AT END PERFORM EST-AGREGAR-NUEVO
-           WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX)
-               EQUAL MAE-ANIO
+           WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX) EQUAL 
+           MAE-ANIO
                ADD 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -428,8 +430,9 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        EST-AGREGAR-NUEVO.
-      *    MOVE MAE-FECHA-ALTA TO TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX).
-      *     MOVE 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
+           MOVE MAE-ANIO TO TAB-ANIO(INC-ALTAS).
+           ADD 1 TO INC-ALTAS.
+           MOVE 1 TO TAB-CANT(INC-ALTAS).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        ULTIMO-REG-CONS1.
@@ -464,7 +467,7 @@
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
-           DISPLAY "ANIO CANT                                          "
+           DISPLAY "ANIO CANT"
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
            PERFORM IMPR-LISTADO UNTIL TABLA-ID-ESTADISTICAS-INDEX > 10.
       *>-----------------------------------------------------------*
@@ -479,8 +482,8 @@
       *>-----------------------------------------------------------*
        IMPR-CONS.
            MOVE MIN TO IMPR-CUIT-CONS.
-      *     MOVE FECHA-ALTA-CONSORCIO TO IMPR-FECHA-ALTA-CONSORCIO.
-      *     MOVE FECHA-BAJA-CONSORCIO TO IMPR-FECHA-BAJA-CONSORCIO.
+      *>     MOVE FECHA-ALTA-CONSORCIO TO IMPR-FECHA-ALTA-CONSORCIO.
+      *>     MOVE FECHA-BAJA-CONSORCIO TO IMPR-FECHA-BAJA-CONSORCIO.
            MOVE FAC-ANIO TO IMPR-FAC-ANIO.
            MOVE FAC-MES TO IMPR-FAC-MES.
            MOVE FAC-DIA TO IMPR-FAC-DIA.
