@@ -160,6 +160,7 @@
            03 FBC-DIA    PIC 9(2).
        01  CUIT-CONSORCIO PIC 9(15).
        01  INC-ALTAS PIC 9(15) VALUE 1.
+       01  F-A   PIC 9(4).
 
        01  TABLA-ESTADO.
            03 TAB-ESTADO OCCURS 30 TIMES
@@ -168,7 +169,7 @@
               05 TAB-EST-DESCRIP PIC X(15).
 
        01  TABLA-ESTADISTICAS.
-           03 TAB-ESTADIS OCCURS 10 TIMES
+           03 TAB-ESTADIS OCCURS 20 TIMES
            INDEXED BY TABLA-ID-ESTADISTICAS-INDEX.
                05 TAB-ANIO PIC 9(4) VALUE 0.
                05 TAB-CANT PIC 9(3) VALUE 0.
@@ -276,8 +277,8 @@
            PERFORM LEER-EST.
            PERFORM LLENAR-TABLA-EST UNTIL EOF-EST OR SUBINDICE > 30.
            MOVE 1 TO SUBINDICE.
-           MOVE 2007 TO ANIO.
-           PERFORM LLENAR-ANIO-ESTADIS UNTIL SUBINDICE>10.
+           MOVE 2005 TO ANIO.
+           PERFORM LLENAR-ANIO-ESTADIS UNTIL SUBINDICE>20.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        LLENAR-TABLA-EST.
@@ -355,7 +356,7 @@
            PERFORM DET-MIN.
       *>    SI NO EXISTE NUMERO DE CUENTA LO DEJO INICIALIZADO EN 0
            MOVE 00000000 TO MAE-CTA
-           PERFORM POS-CTAS.
+           PERFORM POS-CTAS.		
            IF MIN EQUAL CONS1-CUIT-CONS
               PERFORM ULTIMO-REG-CONS1 UNTIL EOF-CONS1
                               OR MIN <> CONS1-CUIT-CONS.
@@ -370,10 +371,14 @@
                ADD 1 TO BAJAS.
            IF ESTADO-CONSORCIO <> 2
                PERFORM BUSCAR-ESTADO
-               PERFORM ESCRIBO-MAE
-           IF ESTADO-CONSORCIO = 1
+               PERFORM ESCRIBO-MAE.
+      *>-----------------------------------------------------------*
+      *>-----------------------------------------------------------*
+       SUMAR-ALTAS.
+           IF ESTADO-CONSORCIO = 1 THEN
                ADD 1 TO ALTAS
-               PERFORM BUSCAR-ESTADISTICAS.
+               PERFORM BUSCAR-ESTADISTICAS
+           END-IF.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        DET-MIN.
@@ -415,9 +420,9 @@
        BUSCAR-ESTADISTICAS.
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
            SEARCH TAB-ESTADIS
-               AT END PERFORM EST-AGREGAR-NUEVO
+               AT END DISPLAY ' '
            WHEN TAB-ANIO(TABLA-ID-ESTADISTICAS-INDEX) EQUAL 
-           MAE-ANIO
+           F-A
                ADD 1 TO TAB-CANT(TABLA-ID-ESTADISTICAS-INDEX).
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -429,12 +434,6 @@
            DISPLAY " ".
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
-       EST-AGREGAR-NUEVO.
-           MOVE MAE-ANIO TO TAB-ANIO(INC-ALTAS).
-           ADD 1 TO INC-ALTAS.
-           MOVE 1 TO TAB-CANT(INC-ALTAS).
-      *>-----------------------------------------------------------*
-      *>-----------------------------------------------------------*
        ULTIMO-REG-CONS1.
            MOVE CONS1-DIR TO DIR-CONSORCIO.
            MOVE CONS1-TEL TO TEL-CONSORCIO.
@@ -443,6 +442,8 @@
            MOVE CONS1-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
            MOVE CONS1-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
            MOVE CONS1-CUIT-CONS TO CUIT-CONSORCIO.
+           MOVE CONS1-ALTA-ANIO TO F-A.
+           PERFORM SUMAR-ALTAS.
            PERFORM LEER-CONS1.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -453,6 +454,8 @@
            MOVE CONS2-ESTADO TO ESTADO-CONSORCIO.
            MOVE CONS2-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
            MOVE CONS2-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
+           MOVE CONS2-ALTA-ANIO TO F-A.
+           PERFORM SUMAR-ALTAS.
            PERFORM LEER-CONS2.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
@@ -463,13 +466,15 @@
            MOVE CONS3-ESTADO TO ESTADO-CONSORCIO.
            MOVE CONS3-FECHA-BAJA TO FECHA-BAJA-CONSORCIO.
            MOVE CONS3-FECHA-ALTA TO FECHA-ALTA-CONSORCIO.
+           MOVE CONS3-ALTA-ANIO TO F-A.
+           PERFORM SUMAR-ALTAS.
            PERFORM LEER-CONS3.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-ESTADISTICAS.
            DISPLAY "ANIO CANT"
            MOVE 1 TO TABLA-ID-ESTADISTICAS-INDEX.
-           PERFORM IMPR-LISTADO UNTIL TABLA-ID-ESTADISTICAS-INDEX > 10.
+           PERFORM IMPR-LISTADO UNTIL TABLA-ID-ESTADISTICAS-INDEX > 13.
       *>-----------------------------------------------------------*
       *>-----------------------------------------------------------*
        IMPR-LISTADO.
