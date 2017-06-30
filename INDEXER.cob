@@ -8,7 +8,6 @@
                                FILE STATUS IS FS-CPR.
 
            SELECT CPR-INDEX    ASSIGN TO "cpr_indexed.txt"
-                               ACCESS MODE IS SEQUENTIAL
                                ORGANIZATION IS INDEXED
                                RECORD KEY IS CPR-INDEX-CUIT-CONS
                                ALTERNATE RECORD KEY IS
